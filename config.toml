@@ -1,0 +1,9 @@
+base_url = "https://lucianosrp.github.io"
+title = "Luciano Scarpulla"
+description = "Personal blog about coding, aviation and more."
+compile_sass = true
+build_search_index = false
+generate_feeds = false
+
+[markdown]
+highlighting = { theme = "github-dark" }

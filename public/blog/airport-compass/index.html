@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luciano Scarpulla</title>
+  <meta name="description" content="Personal blog about coding, aviation and more.">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/fonts.css">
+  <script type="speculationrules">
+  {
+    "prerender": [{
+      "source": "document",
+      "where": { "href_matches": "/blog/*" },
+      "eagerness": "moderate"
+    }]
+  }
+  </script>
+  
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">home</a>
+      <a href="/blog">blog</a>
+    </nav>
+  </header>
+  <main>
+    
+<article>
+  <header>
+    <h1>The airport compass</h1>
+    <time datetime="2024-02-25">2024-02-25</time>
+  </header>
+  <p>A few years ago, I got inspired by a very interesting figure published on a paper by <a rel="external" href="https://github.com/gboeing">Geoff Boeing</a> called <a rel="external" href="https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0189-1">"Urban spatial order: street network orientation, configuration, and entropy"</a>.</p>
+<p>This figure represents the distribution of the orientation of every street of major cities. I like how it gives a quick representation of each city's layout and how evident are the various levels of entropy.</p>
+<p>Shortly after seeing this chart, I immediately thought of replicating this view for airports' traffic worldwide.</p>
+<h2 id="sources-and-code">Sources and code</h2>
+<p>For this project I used two major open-source datasets:</p>
+<ul>
+<li>The airlines routes data comes from <a rel="external" href="https://github.com/jpatokal/openflights">@jpatokal</a>'s OpenFlights repository</li>
+<li>The airports data is from <a rel="external" href="https://github.com/davidmegginson/ourairports-data/">@davidmegginson</a>'s OurAirports repository</li>
+</ul>
+<p>I made the source-code available on my GitHub <a rel="external" href="https://github.com/lucianosrp/airport-compass">here</a>.</p>
+<h2 id="outcomes">Outcomes</h2>
+<p>I first generated the top 15 airports by number of destinations. Each chart (or compass) displays the distribution of outbound flights and aligns those for each initial bearing. The longer the yellow bar, the more frequent is that bearing. For example, if an airport has most of the departures pointing West (or 270°), you would see the longest bar pointing left.</p>
+<p>Some airports like New York JFK and London Heathrow (LHR) represent an important hub for transatlantic flights. In these charts, we can see how LHR has a long bar towards West (towards the North America) and JFK has one towards East (Europe).</p>
+<p>Other airports' compasses, instead, are majorly driven by the geographical constrains of their location. Tokyo's Narita Intl. Airport is a very good example to illustrate this case. It has virtually no routes pointing eastwards! This is because Japan has the Pacific Ocean to its east side and most of the routes connecting Japan to North America are flying with an initial bearing pointing North! (Since this would be the shortest great circle path)</p>
+<h2 id="how-to">How-to</h2>
+<p>As I said earlier in this post, I am using two freely available datasets and published the source code to replicate these charts. Everything is made entirely using Python:</p>
+<ul>
+<li>To merge and transform the data I used <a rel="external" href="https://pandas.pydata.org/">pandas</a></li>
+<li><a rel="external" href="https://matplotlib.org/">matplotlib</a> is used for the visualization</li>
+</ul>
+<h3 id="data">Data</h3>
+<p>First, I set a constant to represent the number of airports I want to have in the final view. In this example, we are going to start with 30. The csv data can be conveniently loaded directly from GitHub using the <code>read_csv</code> method.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">import</span><span> pandas</span><span style="color: #F97583;"> as</span><span> pd</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #79B8FF;">TOP_AIRPORTS</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 30</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;"># Getting airlines&#39; routes data:</span></span>
+<span class="giallo-l"><span>routes</span><span style="color: #F97583;"> =</span><span> pd.read_csv(</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">    &quot;https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat&quot;</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    usecols</span><span style="color: #F97583;">=</span><span>[</span><span style="color: #79B8FF;">0</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>,</span><span style="color: #79B8FF;"> 4</span><span>],</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    names</span><span style="color: #F97583;">=</span><span>[</span><span style="color: #9ECBFF;">&quot;airline&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;origin&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;destination&quot;</span><span>],</span></span>
+<span class="giallo-l"><span>)</span></span></code></pre>
+<p>This first dataset doesn't come with headers, hence why we need to use the <code>names</code> argument to specify the column names. Also, we are just interested in knowing the origin and destination airport of each route (Column 2 and 4), I also added the airline IATA code (Column 0) because I was curious, but not needed for this project.</p>
+<p>We are also not interested in displaying all airports on this dataset. To do so, we can get the Top airports by grouping the data, ordering it and accessing only until the <code>TOP_AIRPORTS</code> constant number:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #6A737D;"># Selecting only top airports</span></span>
+<span class="giallo-l"><span>top_airports</span><span style="color: #F97583;"> =</span><span> (</span></span>
+<span class="giallo-l"><span>    routes.groupby(</span><span style="color: #9ECBFF;">&quot;origin&quot;</span><span>)</span></span>
+<span class="giallo-l"><span>    .destination.count()</span></span>
+<span class="giallo-l"><span>    .sort_values(</span><span style="color: #FFAB70;">ascending</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">False</span><span>)</span></span>
+<span class="giallo-l"><span>    .index[:</span><span style="color: #79B8FF;">TOP_AIRPORTS</span><span>]</span></span>
+<span class="giallo-l"><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>routes</span><span style="color: #F97583;"> =</span><span> routes.loc[routes.origin.isin(top_airports)]</span></span></code></pre>
+<p>Now, we are just having data about each airlines' routes. But in order to plot the data into small compasses, we will need to calculate the initial bearing of each airport pair. And in order to do so, we also need the coordinates of each airport:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #6A737D;"># Getting airports data:</span></span>
+<span class="giallo-l"><span>airports</span><span style="color: #F97583;"> =</span><span> pd.read_csv(</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">    &quot;https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/airports.csv&quot;</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    usecols</span><span style="color: #F97583;">=</span><span>[</span><span style="color: #9ECBFF;">&quot;ident&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;iata_code&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;latitude_deg&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;longitude_deg&quot;</span><span>],</span></span>
+<span class="giallo-l"><span>)</span></span></code></pre>
+<p>While looping for <code>origin</code> and <code>destination</code> we also make sure that the columns in the airport dataset are suffixed with "_origin" and "_destination" respectively. We can now calculate the bearing (angle) for each pair:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">import</span><span> numpy</span><span style="color: #F97583;"> as</span><span> np</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;"># Getting initial bearing for each route:</span></span>
+<span class="giallo-l"><span>df[</span><span style="color: #9ECBFF;">&quot;angle&quot;</span><span>]</span><span style="color: #F97583;"> =</span><span> np.degrees(</span></span>
+<span class="giallo-l"><span>    np.arctan2(</span></span>
+<span class="giallo-l"><span>        df.latitude_deg_destination</span><span style="color: #F97583;"> -</span><span> df.latitude_deg_origin,</span></span>
+<span class="giallo-l"><span>        df.longitude_deg_destination</span><span style="color: #F97583;"> -</span><span> df.longitude_deg_origin,</span></span>
+<span class="giallo-l"><span>    )</span></span>
+<span class="giallo-l"><span>)</span></span></code></pre>
+<p>Numpy can do all the math for us with a resulting column "angle" which contains all angles for each pair.</p>
+<p>Since we would want to have a sense of the "distribution" of routes for each angle, we can make a resulting dataframe by doing a final aggregation:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #6A737D;"># Aggregating final data:</span></span>
+<span class="giallo-l"><span>res</span><span style="color: #F97583;"> =</span><span> df.groupby([</span><span style="color: #9ECBFF;">&quot;origin&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;angle&quot;</span><span>]).destination.count()</span></span></code></pre><h3 id="visualization">Visualization</h3>
+<p>We can dynamically create the layout of our "poster" by dividing the total number of airports by the number of columns we want to have:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span>ncols</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 5</span></span>
+<span class="giallo-l"><span>nrows</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> len</span><span>(top_airports)</span><span style="color: #F97583;"> //</span><span> ncols</span></span></code></pre>
+<p>Now we can set up the figure and axes of our plot:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span>fig, axes</span><span style="color: #F97583;"> =</span><span> plt.subplots(</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    nrows</span><span style="color: #F97583;">=</span><span>nrows,</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    ncols</span><span style="color: #F97583;">=</span><span>ncols,</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    subplot_kw</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">dict</span><span>(</span><span style="color: #FFAB70;">projection</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;polar&quot;</span><span>),</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    figsize</span><span style="color: #F97583;">=</span><span>(ncols</span><span style="color: #F97583;"> *</span><span style="color: #79B8FF;"> 1.9</span><span>, nrows</span><span style="color: #F97583;"> *</span><span style="color: #79B8FF;"> 2.6</span><span>),</span></span>
+<span class="giallo-l"><span>)</span></span></code></pre>
+<p>We can fill each axis with a for-loop:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">for</span><span> ax, airport</span><span style="color: #F97583;"> in</span><span style="color: #79B8FF;"> zip</span><span>(axes.flatten(), top_airports):</span></span>
+<span class="giallo-l"><span>    airport_data</span><span style="color: #F97583;"> =</span><span> res.loc[airport]</span></span>
+<span class="giallo-l"><span>    ax.bar(</span></span>
+<span class="giallo-l"><span>        np.radians(airport_data.index),</span></span>
+<span class="giallo-l"><span>        airport_data.values,</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">        width</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">0.3</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">        color</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;C2&quot;</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">        alpha</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">0.5</span><span>,</span></span>
+<span class="giallo-l"><span>    )</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    ax.set_title(</span><span style="color: #F97583;">f</span><span style="color: #9ECBFF;">&quot;</span><span style="color: #79B8FF;">{</span><span>airport</span><span style="color: #79B8FF;">}\n</span><span style="color: #9ECBFF;">&quot;</span><span>,</span><span style="color: #FFAB70;"> fontdict</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">dict</span><span>(</span><span style="color: #FFAB70;">fontweight</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;bold&quot;</span><span>))</span></span>
+<span class="giallo-l"><span>    ax.set_yticks([])</span></span>
+<span class="giallo-l"><span>    ax.set_rlabel_position(</span><span style="color: #79B8FF;">90</span><span>)</span></span>
+<span class="giallo-l"><span>    ax.set_xticklabels([</span><span style="color: #9ECBFF;">&quot;E&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;N&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;W&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;S&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;&quot;</span><span>],</span><span style="color: #FFAB70;"> fontdict</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">dict</span><span>(</span><span style="color: #FFAB70;">fontsize</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">10</span><span>))</span></span></code></pre>
+<p>Here, <code>axes.flatten()</code> conveniently "flattens" out the nested array that <code>axes</code> is. We don't need the ticks for the Y axis so we turn them off using <code>ax.set_yticks([])</code>.</p>
+<p>The <code>set_xtickslabels</code> currently raise a <code>UserWarning</code> which we can safely ignore.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span>fig.suptitle(</span><span style="color: #9ECBFF;">&quot;Where is the traffic going?&quot;</span><span>,</span><span style="color: #FFAB70;"> fontsize</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">25</span><span>,</span><span style="color: #FFAB70;"> fontweight</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;bold&quot;</span><span>)</span></span>
+<span class="giallo-l"><span>fig.text(</span><span style="color: #79B8FF;">0.05</span><span>,</span><span style="color: #79B8FF;"> 0.005</span><span>,</span><span style="color: #9ECBFF;"> &quot;Made by Luciano Scarpulla&quot;</span><span>)</span></span>
+<span class="giallo-l"><span>fig.tight_layout(</span><span style="color: #FFAB70;">pad</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">3</span><span>)</span></span>
+<span class="giallo-l"><span>fig.savefig(</span><span style="color: #F97583;">f</span><span style="color: #9ECBFF;">&quot;Where is it going </span><span style="color: #79B8FF;">{TOP_AIRPORTS}</span><span style="color: #9ECBFF;">.png&quot;</span><span>,</span><span style="color: #FFAB70;"> dpi</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">300</span><span>)</span></span></code></pre><h2 id="what-s-next">What's next?</h2>
+<p>I first developed this years ago and re-adapted my old code for this post. There are some changes and improvements that can be made:</p>
+<ul>
+<li>The data is grouped by each unique bearing. This can be fixed by simply rounding the angles, or distributing the angles into different buckets (e.g 130-140 degrees, 140-150, etc.)</li>
+<li>The image is a static outlook at airlines' routes of 2014. A seasonal outlook could be made so that you could notice the differences in the "orientation" in certain airports.</li>
+</ul>
+
+</article>
+
+  </main>
+  <footer>
+    <p>luciano</p>
+  </footer>
+</body>
+</html>

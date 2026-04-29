@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://lucianosrp.github.io/</loc>
+    </url>
+    <url>
+        <loc>https://lucianosrp.github.io/blog/</loc>
+    </url>
+    <url>
+        <loc>https://lucianosrp.github.io/blog/airport-compass/</loc>
+        <lastmod>2024-02-25</lastmod>
+    </url>
+    <url>
+        <loc>https://lucianosrp.github.io/blog/how-i-gained-stars/</loc>
+        <lastmod>2024-06-26</lastmod>
+    </url>
+    <url>
+        <loc>https://lucianosrp.github.io/blog/my-experience-with-coursera/</loc>
+        <lastmod>2024-04-06</lastmod>
+    </url>
+    <url>
+        <loc>https://lucianosrp.github.io/blog/python-tools/</loc>
+        <lastmod>2024-03-03</lastmod>
+    </url>
+    <url>
+        <loc>https://lucianosrp.github.io/blog/switching-to-rust/</loc>
+        <lastmod>2024-02-02</lastmod>
+    </url>
+    <url>
+        <loc>https://lucianosrp.github.io/blog/wrong-about-rye/</loc>
+        <lastmod>2024-03-14</lastmod>
+    </url>
+</urlset>

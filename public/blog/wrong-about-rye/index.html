@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luciano Scarpulla</title>
+  <meta name="description" content="Personal blog about coding, aviation and more.">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/fonts.css">
+  <script type="speculationrules">
+  {
+    "prerender": [{
+      "source": "document",
+      "where": { "href_matches": "/blog/*" },
+      "eagerness": "moderate"
+    }]
+  }
+  </script>
+  
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">home</a>
+      <a href="/blog">blog</a>
+    </nav>
+  </header>
+  <main>
+    
+<article>
+  <header>
+    <h1>I was wrong about Rye</h1>
+    <time datetime="2024-03-14">2024-03-14</time>
+  </header>
+  <p>While talking about Rye, in the previous post I wrote that the lack of implementations for VScode or Pycharm had made me reluctant to adopt it full time.</p>
+<p>By "lack of implementations" I meant that there was no python environment finder suited for Rye's virtual environment. I probably did not use Rye properly in the first time, since Rye's virtual env is <em>literally</em> a Virtualenv, and so it can be discovered by all majors IDEs.</p>
+<p>Somehow, I first thought Rye had its own virtual environment type!</p>
+<p>Since finding this out, I now intend to use it full-time and will post more about it whenever needed.</p>
+<p>My tips for using it is to make sure to <code>rye sync</code> after every <code>rye add</code> since this last command does not install the actual packages that will be listed on the project configuration itself. Although I like this behaviour, I would love to have an option to default <code>rye sync</code> after every <code>rye add</code> (similar to <code>cargo add</code>).</p>
+<p>Also, <code>uv</code> integration does not come as a default. It needs to be enabled in the global rye configurations!</p>
+
+</article>
+
+  </main>
+  <footer>
+    <p>luciano</p>
+  </footer>
+</body>
+</html>

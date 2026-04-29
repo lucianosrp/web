@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luciano Scarpulla</title>
+  <meta name="description" content="Personal blog about coding, aviation and more.">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/fonts.css">
+  <script type="speculationrules">
+  {
+    "prerender": [{
+      "source": "document",
+      "where": { "href_matches": "/blog/*" },
+      "eagerness": "moderate"
+    }]
+  }
+  </script>
+  
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">home</a>
+      <a href="/blog">blog</a>
+    </nav>
+  </header>
+  <main>
+    
+<article>
+  <header>
+    <h1>How Rust tools are taking over the Python dev ecosystem</h1>
+    <time datetime="2024-03-03">2024-03-03</time>
+  </header>
+  <p>As previously mentioned in this blog, Rust is becoming more and more used in Python libraries such as Pydantic and Polars. But recently we are also getting python tools written in Rust!</p>
+<p>Few months ago, I followed the development of <a rel="external" href="https://rye-up.com/">Rye</a> as an alternative Python project and package manager. Later on, <a rel="external" href="https://docs.astral.sh/ruff/">Ruff</a> made its debut as a linter and formatter substituting the popular <a rel="external" href="https://flake8.pycqa.org/en/latest/">flake-8</a> and <a rel="external" href="https://black.readthedocs.io/en/stable/">black</a>.</p>
+<p>Thanks to their powerful backend written in Rust, these tools all provide a substantial upgrade in terms of performance and flexibility compared to the tools they are aiming to replace (up to 100x faster).</p>
+<h2 id="ruff">Ruff</h2>
+<p>I found <code>ruff format</code> to be the easiest tool to replace. I often bind the reformat command to a shortcut or to reformat while saving. But more often, I tend to reformat the whole project before committing. The performance of Ruff allows me to confidently reformat thousands of lines knowing that I will not need to wait long.</p>
+<p>Adopting <code>ruff format</code> together with <code>ruff check</code> in your pipelines can substantially reduces your actions time!</p>
+<h2 id="rye">Rye</h2>
+<p>Even before Astral's ruff and uv were available, I got Rye a try. Rye was the first attempt to implement a "Cargo for Python" - a 360 degrees project and package management at your fingertips. I immediately found Rye very easy to use and, to some extent, similar to Poetry! However, the lack of implementations for VScode (at the time of testing) or Pycharm had made me reluctant to adopt it full time.</p>
+<h2 id="uv">Uv</h2>
+<p>Uv is the latest addition to the Rust-born Python family tools. It is the fastest package manager out there and is able to quickly resolve most of your painful package dependencies. It is also a replacement for <code>venv</code>, so you can quickly set up a new virtual environment for your Python project.</p>
+<p>After Uv was released, Astral also announced the takeover of Rye and implemented uv as the core package manager for Rye.</p>
+<h2 id="what-i-use-what-i-am-not-using-and-what-s-next">What I use, what I am not using and what's next</h2>
+<p>I now fully use ruff on a daily basis both at work and for private projects. It is so easy to use that I often forget it is running.</p>
+<p>Due to the current lack of support for Pycharm (the IDE I use at work) I am not currently using either Rye nor Uv at work, but I am still using them on my local machine for personal projects.</p>
+<p>I look forward to see what Astral is developing next - perhaps a "Clippy for Python" or a rust-based static type checker to substitute mypy? Everything seems to be possible at this point.</p>
+
+</article>
+
+  </main>
+  <footer>
+    <p>luciano</p>
+  </footer>
+</body>
+</html>
