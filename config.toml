@@ -1,9 +1,17 @@
-base_url = "https://lucianosrp.github.io"
+base_url = "https://luciano.live"
 title = "Luciano Scarpulla"
 description = "Personal blog about coding, aviation and more."
+author = "luciano"
 compile_sass = true
 build_search_index = false
-generate_feeds = false
+generate_feeds = true
+feed_limit = 10
+
+taxonomies = [{ name = "tags" }]
 
 [markdown]
 highlighting = { theme = "github-dark" }
+
+[extra]
+github = "https://github.com/lucianosrp"
+email = "mailto:scarpulla53@gmail.com"

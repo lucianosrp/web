@@ -1,0 +1,109 @@
+cv:
+  name: Luciano Scarpulla
+  location: Hong Kong
+  email: scarpulla53@gmail.com
+  website:
+  social_networks:
+    - network: LinkedIn
+      username: luciano-scarpulla
+    - network: GitHub
+      username: lucianosrp
+  sections:
+    summary:
+      - Passionate tech professional with a strong background in Python programming and data analysis. Skilled at turning complex data into actionable insights and collaborating with teams to solve problems. Excellent communicator with a proactive and adaptable approach.
+    skills_and_certificates:
+      - label: Programming
+        details: Python, Rust, SQL, Multi-threading, Multi-processing, Web Scraping
+      - label: Data Analysis
+        details: Pandas, Polars, NumPy, PySpark, ETL processes, Parquet, Apache Arrow
+      - label: Machine Learning
+        details: Neural Networks, Large Language Models (LLMs), AI, Deep Neural Networks (IBM)
+      - label: Tools
+        details: Tableau, Sisense, Matplotlib, Streamlit, Git, AWS, Azure, S3, Linux
+      - label: Language
+        details: English, Italian, French
+      - label: Soft Skills
+        details: Problem-solving, project management, teamwork, client support
+    experience:
+      - company: WINGX (Part of JETNET)
+        position: Senior Python Developer / Business Intelligence Analyst
+        start_date: 2024-11
+        end_date: present
+        location: Hong Kong
+        summary: After the acquisition of WINGX by JETNET, I took on a senior role to further drive the integration and expansion of our BI capabilities while focusing on the development and optimization of our Python-based data processing systems.
+        highlights:
+          - Lead Python+SQL based data projects to support business intelligence, aligning technical solutions with company goals.
+          - Optimize data pipelines, cutting processing times by 20% using Python libraries and building multi-threaded tasks.
+          - Collaborate with global teams to deliver reliable, scalable solutions for clients.
+          - Work on integrating customer’s data with market intelligence with multiple SQL databases and other file formats (Parquet, HDF, S3 buckets, etc.)
+      - company: WINGX (Part of JETNET)
+        position: Business Intelligence Lead Analyst / Python Developer
+        start_date: 2021-10
+        end_date: 2024-11
+        location: Hamburg
+        summary: Lead Analyst at a pioneering aviation-focused business intelligence startup, acquired by JETNET LLC in 2023 due to significant growth and strategic contributions.
+        highlights:
+          - Built and maintained concurrent data pipelines, reducing processing time by 70% and enabling faster insights.
+          - Created 100+ BI reports and dashboards using Tableau and Sisense, helping clients make informed decisions.
+          - Worked closely with clients to understand their needs and deliver tailored analytical solutions.
+      - company: WINGX
+        position: Data Researcher
+        start_date: 2021-02
+        end_date: 2021-10
+        location: Hamburg
+        summary: Undertook part-time employment as an independent data researcher for WINGX.
+        highlights:
+          - Gathered and analyzed aviation data to support team research initiatives.
+          - Partnered with colleagues to identify trends and improve data-driven decision-making.
+      - company: PRIVATEFLY (Now known as FXAIR)
+        position: Flight Adviser / Sales
+        start_date: 2019-05
+        end_date: 2020-08
+        location: London
+        summary: Student internship at the leading Private Jet Charter company in Europe. Securing and closing sales leads.
+        highlights:
+          - Secured new clients and generated over 320K GBP in sales for private jet charters in 13 months.
+          - Discussing with the clients about their private jet needs.
+          - Analyzing and researching the market for private jet availability.
+    education:
+      - institution: Coventry University
+        area: Aviation Management
+        degree: BSc H.
+        start_date: 2017-09
+        end_date: 2021-05
+        location: UK
+        summary: A comprehensive 3+1 year degree based on International Business Management focused on international business, data management, and analytics in the aviation industry.
+        highlights:
+          - International Business and Information Management
+          - Project Management and Business Development
+          - Business Information System
+          - Supply chain logistics
+          - Airline Marketing and Management
+          - Fundamentals of Aeronautical Engineering
+    projects and talks:
+      - name: Sprint Leader at PyCon HK 2025 - frame-check @ City University of Hong Kong
+        url: https://github.com/lucianosrp/frame-check
+        summary: Leading an open-source sprint at PyCon Hong Kong 2025 for frame-check, a Python static analysis tool that validates DataFrame schemas and column access at development time.
+        highlights:
+          - Developed a DataFrame validation tool that tracks schema and raises errors for invalid column access or schema violations.
+          - Leading sprint goals including core parser (DataFrame creation parsing, user-specified schema, variable assignment) and core checker (rules and validators).
+          - Planning LSP/file watcher integration for real-time feedback during development.
+
+      - name: Narwhals - Discover DataFrame Interoperabilty (Python User Group @ City University of Hong Kong)
+        url: https://github.com/lucianosrp/talks/tree/main/python
+        summary: Gave a talk at City University of Hong Kong for the Python User Group demonstrating DataFrame interoperability between Pandas, Polars, and DuckDB, focusing on practical use cases and performance considerations.
+        highlights:
+          - Presented techniques for seamless data conversion between different DataFrame libraries.
+          - Demonstrated performance optimizations when working with large datasets.
+          - Shared real-world examples of data manipulation workflows that leverage multiple DataFrame implementations.
+
+      - name: Simplemind (LLM/ Generative AI) - Open Source
+        url: https://github.com/kennethreitz/simplemind
+        summary: Collaborated with the creator of Python's requests library to develop Simplemind, an LLM library with OpenAI and other LLMs integrations.
+        highlights:
+          - Designed and implemented core features and proof-of-concept (PoC) solutions.
+          - Documented software designs and integration best practices to ensure scalability and maintainability.
+design:
+  theme: classic
+  highlights:
+    top_margin: 0.6cm

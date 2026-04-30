@@ -2,16 +2,30 @@
 title = "I was wrong about Rye"
 date = 2024-03-14
 draft = false
+tags = ["Python"]
 +++
 
-While talking about Rye, in the previous post I wrote that the lack of implementations for VScode or Pycharm had made me reluctant to adopt it full time.
+While talking about Rye in my post on Python tools, I wrote that the lack of implementations for VS Code or PyCharm made me reluctant to adopt it full time.
 
-By "lack of implementations" I meant that there was no python environment finder suited for Rye's virtual environment. I probably did not use Rye properly in the first time, since Rye's virtual env is *literally* a Virtualenv, and so it can be discovered by all majors IDEs.
+By that I meant there was no Python environment finder suited for Rye's virtual environment. I probably didn't use Rye properly the first time, since Rye's virtual env is *literally* a Virtualenv, and so it can be discovered by all major IDEs. Somehow I thought Rye had its own virtual environment type!
 
-Somehow, I first thought Rye had its own virtual environment type!
+Since finding this out, I now use it full-time for personal projects.
 
-Since finding this out, I now intend to use it full-time and will post more about it whenever needed.
+## My tips for using Rye
 
-My tips for using it is to make sure to `rye sync` after every `rye add` since this last command does not install the actual packages that will be listed on the project configuration itself. Although I like this behaviour, I would love to have an option to default `rye sync` after every `rye add` (similar to `cargo add`).
+1. **Always run `rye sync` after `rye add`** — The `add` command only updates your project configuration. It doesn't install packages. Run `rye sync` afterward to actually install them. I wish there was an option to make this the default behavior (like `cargo add`).
 
-Also, `uv` integration does not come as a default. It needs to be enabled in the global rye configurations!
+2. **Enable uv integration** — It doesn't come enabled by default. Add this to your global Rye config:
+
+```toml
+[global]
+use-uv = true
+```
+
+This makes package installation much faster.
+
+## What I was wrong about
+
+The core mistake was assuming that "custom virtual environment format" meant "incompatible with everything." I should have tested it in my IDE first before writing it off.
+
+The lesson: Don't assume — test.

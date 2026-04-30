@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% set active_section = 'reading' %} {% block content
+%}
+<section class="reading">
+    <h1>// reading list</h1>
+    <ul class="books">
+        {% set data = load_data(path="content/data/books.yaml") %}
+        {% set sorted_books = data.books | sort(attribute="date") | reverse %}
+        {% for book in sorted_books %}
+        <li class="book-item">
+            <div class="book-box">
+                <div class="book-meta">
+                    <time>{{ book.date | date(format="%Y.%m.%d") }}</time>
+                    <strong>{{ book.title }}</strong>
+                    {% if book.author %}
+                    <span class="book-author">by {{ book.author }}</span>
+                    {% endif %} {% if book.progress %} {% set p = book.progress
+                    | int %} {% if p >= 100 %}
+                    <span class="progress-done">[done]</span>
+                    {% else %}
+                    <div class="progress-bar">
+                        <div class="bar-fill" style="width: {{ p }}%"></div>
+                    </div>
+                    {% endif %} {% endif %}
+                </div>
+                {% if book.progress and book.progress | int < 100 %}
+                <div class="bar-text-wrapper">
+                    <span class="bar-text">{{ book.progress }}%</span>
+                </div>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

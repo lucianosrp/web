@@ -1,0 +1,53 @@
+books:
+  - title: "Le Comte de Monte-Cristo"
+    date: 2025-11-25
+    progress: 45
+    author: "Alexandre Dumas"
+  - title: "Free to Choose"
+    date: 2025-06-02
+    author: "Milton Friedman"
+    progress: 47
+  - title: "The Great Wall"
+    date: 2024-04-02
+    author: "Julia Lovell"
+    progress: 100
+  - title: "In the Buddha's Words"
+    date: 2025-02-02
+    author: "Bhikkhu Bodhi"
+    progress: 45
+  - title: "Tao Te Ching"
+    date: 2025-01-01
+    author: "Lao Tzu"
+    progress: 100
+  - title: "God Emperor of Dune"
+    date: 2024-03-12
+    author: "Frank Herbert"
+    progress: 100
+  - title: "Il fu Mattia Pascal"
+    date: 2024-01-23
+    author: "Luigi Pirandello"
+    progress: 100
+  - title: "1984"
+    date: 2023-08-01
+    author: "George Orwell"
+    progress: 100
+  - title: "Children of Dune"
+    date: 2023-06-27
+    progress: 100
+    author: "Frank Herbert"
+  - title: "Dune Messiah"
+    date: 2023-05-01
+    author: "Frank Herbert"
+    progress: 100
+  - title: "Animal Farm"
+    date: 2023-02-01
+    author: "George Orwell"
+    progress: 100
+  - title: "Dune"
+    date: 2023-01-19
+    author: "Frank Herbert"
+    progress: 100
+  - title: "L'Étranger"
+    date: 2023-01-17
+    author: "Albert Camus"
+    progress: 100

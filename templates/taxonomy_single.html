@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="tag-posts">
+  <h1>// tag: {{ term.name | lower }}</h1>
+  <ul>
+    {% for page in term.pages %}
+    <li>
+      <a href="{{ page.permalink }}">{{ page.title }}</a>
+      <span class="separator">::</span>
+      <time>{{ page.date | date(format="%Y.%m.%d") }}</time>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends "base.html" %} {% block head %}
+<link rel="stylesheet" href="/cv.css" />
+{% endblock %} {% block content %} {% set cv_data =
+load_data(path="content/data/cv.yaml") %} {% set cv = cv_data.cv %}
+<section class="cv">
+    <header class="cv-header">
+        <h1>{{ cv.name }}</h1>
+        <div class="cv-meta">
+            <span>{{ cv.location }}</span>
+            <span>::</span>
+            <a href="mailto:{{ cv.email }}">{{ cv.email }}</a>
+        </div>
+        <div class="cv-social">
+            {% if cv.website %}<a href="{{ cv.website }}">website</a>{% endif %}
+            {% for social in cv.social_networks %}
+            <a
+                href="https://linkedin.com/in/{{ social.username }}"
+                target="_blank"
+                rel="noopener"
+                >{{ social.network }}</a
+            >
+            {% endfor %}
+        </div>
+    </header>
+
+    {% if cv.sections.summary %}
+    <section class="cv-section">
+        <h2>// summary</h2>
+        <ul>
+            {% for item in cv.sections.summary %}
+            <li>{{ item | safe }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %} {% if cv.sections.skills_and_certificates %}
+    <section class="cv-section">
+        <h2>// skills & certificates</h2>
+        <ul class="skills-list">
+            {% for skill in cv.sections.skills_and_certificates %}
+            <li><strong>{{ skill.label }}:</strong> {{ skill.details }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %} {% if cv.sections.experience %}
+    <section class="cv-section">
+        <h2>// experience</h2>
+        <ul class="exp-list">
+            {% for job in cv.sections.experience %}
+            <li class="exp-item">
+                <div class="exp-header">
+                    <strong>{{ job.position }}</strong>
+                    <span class="exp-company">{{ job.company }}</span>
+                    <span class="exp-date"
+                        >{{ job.start_date }} - {{ job.end_date }}</span
+                    >
+                </div>
+                <div class="exp-location">{{ job.location }}</div>
+                <p>{{ job.summary }}</p>
+                {% if job.highlights %}
+                <ul class="exp-highlights">
+                    {% for h in job.highlights %}
+                    <li>{{ h }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %} {% if cv.sections.education %}
+    <section class="cv-section">
+        <h2>// education</h2>
+        <ul class="edu-list">
+            {% for edu in cv.sections.education %}
+            <li class="edu-item">
+                <div class="edu-header">
+                    <strong>{{ edu.institution }}</strong>
+                    <span class="edu-degree">{{ edu.degree }}</span>
+                    <span class="edu-date"
+                        >{{ edu.start_date }} - {{ edu.end_date }}</span
+                    >
+                </div>
+                <div class="edu-area">{{ edu.area }}</div>
+                <div class="edu-location">{{ edu.location }}</div>
+                {% if edu.summary %}
+                <p>{{ edu.summary }}</p>
+                {% endif %} {% if edu.highlights %}
+                <ul class="edu-highlights">
+                    {% for h in edu.highlights %}
+                    <li>{{ h }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %} {% if cv.sections["projects and talks"] %}
+    <section class="cv-section">
+        <h2>// projects & talks</h2>
+        <ul class="projects-list">
+            {% for p in cv.sections["projects and talks"] %}
+            <li class="project-item">
+                <div class="project-header">
+                    <strong>{{ p.name }}</strong>
+                    {% if p.url %}<a
+                        href="{{ p.url }}"
+                        target="_blank"
+                        rel="noopener"
+                        >view</a
+                    >{% endif %}
+                </div>
+                <p>{{ p.summary }}</p>
+                {% if p.highlights %}
+                <ul class="project-highlights">
+                    {% for h in p.highlights %}
+                    <li>{{ h }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+</section>
+{% endblock %}

@@ -5,8 +5,14 @@
   <ul>
     {% for page in section.pages %}
     <li>
-      <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
-      <time datetime="{{ page.date }}">{{ page.date | date(format="%Y-%m-%d") }}</time>
+      <div class="post-meta">
+        <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+        <span class="post-info">
+          <time datetime="{{ page.date }}">{{ page.date | date(format="%Y.%m.%d") }}</time>
+          <span class="separator">::</span>
+          <span>{{ page.reading_time }} min read</span>
+        </span>
+      </div>
     </li>
     {% endfor %}
   </ul>

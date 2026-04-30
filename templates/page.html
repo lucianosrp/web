@@ -3,8 +3,44 @@
 <article>
   <header>
     <h1>{{ page.title }}</h1>
-    <time datetime="{{ page.date }}">{{ page.date | date(format="%Y-%m-%d") }}</time>
+    <ul class="post-meta">
+      <li>{{ config.author }}</li>
+      <li>::</li>
+      <li><time datetime="{{ page.date }}">{{ page.date | date(format="%Y.%m.%d") }}</time></li>
+      <li>::</li>
+      <li>{{ page.reading_time }} min read</li>
+    </ul>
   </header>
+
+  {% if page.toc %}
+  <nav class="toc">
+    <h2>// contents</h2>
+    <ul>
+      {% for h1 in page.toc %}
+      <li>
+        <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+        {% if h1.children %}
+        <ul>
+          {% for h2 in h1.children %}
+          <li><a href="{{ h2.permalink | safe }}">{{ h2.title }}</a></li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+
   {{ page.content | safe }}
+
+  <nav class="post-nav">
+    {% if page.lower %}
+    <a href="{{ page.lower.permalink | safe }}">&larr; {{ page.lower.title }}</a>
+    {% endif %}
+    {% if page.higher %}
+    <a href="{{ page.higher.permalink | safe }}">{{ page.higher.title }} &rarr;</a>
+    {% endif %}
+  </nav>
 </article>
 {% endblock %}

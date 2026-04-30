@@ -2,11 +2,12 @@
 title = "The airport compass"
 date = 2024-02-25
 draft = false
+tags = ["Python", "Aviation", "Visualization"]
 +++
 
 A few years ago, I got inspired by a very interesting figure published on a paper by [Geoff Boeing](https://github.com/gboeing) called ["Urban spatial order: street network orientation, configuration, and entropy"](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0189-1).
 
-This figure represents the distribution of the orientation of every street of major cities. I like how it gives a quick representation of each city's layout and how evident are the various levels of entropy.
+This figure represents the distribution of the orientation of every street of major cities. I like how it gives a quick representation of each city's layout and how evident the various levels of entropy are.
 
 Shortly after seeing this chart, I immediately thought of replicating this view for airports' traffic worldwide.
 
@@ -21,15 +22,21 @@ I made the source-code available on my GitHub [here](https://github.com/lucianos
 
 ## Outcomes
 
-I first generated the top 15 airports by number of destinations. Each chart (or compass) displays the distribution of outbound flights and aligns those for each initial bearing. The longer the yellow bar, the more frequent is that bearing. For example, if an airport has most of the departures pointing West (or 270°), you would see the longest bar pointing left.
+I first generated the top 15 airports by number of destinations. Each chart (or compass) displays the distribution of outbound flights and aligns those for each initial bearing. The longer the yellow bar, the more frequently that bearing occurs. For example, if an airport has most of the departures pointing West (or 270°), you would see the longest bar pointing left.
 
-Some airports like New York JFK and London Heathrow (LHR) represent an important hub for transatlantic flights. In these charts, we can see how LHR has a long bar towards West (towards the North America) and JFK has one towards East (Europe).
+![15 Airports view](/assets/img/airport-compass/Where-is-it-going-15.png)
 
-Other airports' compasses, instead, are majorly driven by the geographical constrains of their location. Tokyo's Narita Intl. Airport is a very good example to illustrate this case. It has virtually no routes pointing eastwards! This is because Japan has the Pacific Ocean to its east side and most of the routes connecting Japan to North America are flying with an initial bearing pointing North! (Since this would be the shortest great circle path)
+Some airports like New York JFK and London Heathrow (LHR) represent an important hub for transatlantic flights. In these charts, we can see how LHR has a long bar towards the West (towards North America) and JFK has one towards the East (Europe).
+
+![LHR](/assets/img/airport-compass/LHR-dark.png)
+
+Other airports' compasses, instead, are majorly driven by the geographical constrains of their location. Tokyo's Narita Intl. Airport is a very good example to illustrate this case. It has virtually no routes pointing eastwards! This is because Japan has the Pacific Ocean to its east side and most of the routes connecting Japan to North America take an initial bearing pointing North! (Since this would be the shortest great circle path)
+
+![NRT](/assets/img/airport-compass/NRT-dark.png)
 
 ## How-to
 
-As I said earlier in this post, I am using two freely available datasets and published the source code to replicate these charts. Everything is made entirely using Python:
+As I said earlier in this post, I used two freely available datasets and published the source code to replicate these charts. Everything is made entirely using Python:
 
 - To merge and transform the data I used [pandas](https://pandas.pydata.org/)
 - [matplotlib](https://matplotlib.org/) is used for the visualization
@@ -77,7 +84,7 @@ airports = pd.read_csv(
 )
 ```
 
-While looping for `origin` and `destination` we also make sure that the columns in the airport dataset are suffixed with "_origin" and "_destination" respectively. We can now calculate the bearing (angle) for each pair:
+When looping for `origin` and `destination` we also make sure that the columns in the airport dataset are suffixed with "_origin" and "_destination" respectively. We can now calculate the bearing (angle) for each pair:
 
 ```python
 import numpy as np
@@ -156,3 +163,17 @@ I first developed this years ago and re-adapted my old code for this post. There
 
 - The data is grouped by each unique bearing. This can be fixed by simply rounding the angles, or distributing the angles into different buckets (e.g 130-140 degrees, 140-150, etc.)
 - The image is a static outlook at airlines' routes of 2014. A seasonal outlook could be made so that you could notice the differences in the "orientation" in certain airports.
+
+## Key Insights
+
+This visualization reveals interesting patterns about global air travel:
+
+1. **Transatlantic hubs** — LHR and JFK stand out with strong opposing bearings. LHR points West (towards North America), JFK points East (towards Europe). This reflects the dominant transatlantic market.
+
+2. **Geographical constraints** — Tokyo Narita shows almost no eastward routes because the Pacific Ocean makes it inefficient. Routes to North America actually head North — the shortest great circle path.
+
+3. **Regional vs international** — Some airports (like in the Middle East) show a balanced spread, reflecting their role as connecting hubs between multiple continents.
+
+These patterns emerge naturally from the data and tell a story about how geography and market demand shape air traffic.
+
+![30 Airports view](/assets/img/airport-compass/Where-is-it-going-30.png)
