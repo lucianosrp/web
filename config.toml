@@ -5,6 +5,7 @@ author = "luciano"
 compile_sass = true
 build_search_index = false
 generate_feeds = true
+generate_sitemap = true
 feed_limit = 10
 
 taxonomies = [{ name = "tags" }]

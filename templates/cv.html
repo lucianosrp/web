@@ -13,8 +13,9 @@ load_data(path="content/data/cv.yaml") %} {% set cv = cv_data.cv %}
         <div class="cv-social">
             {% if cv.website %}<a href="{{ cv.website }}">website</a>{% endif %}
             {% for social in cv.social_networks %}
+            {% set network = social.network | lower %}
             <a
-                href="https://linkedin.com/in/{{ social.username }}"
+                href="{% if network == 'linkedin' %}https://linkedin.com/in/{{ social.username }}{% elif network == 'github' %}https://github.com/{{ social.username }}{% else %}https://{{ network }}.com/in/{{ social.username }}{% endif %}"
                 target="_blank"
                 rel="noopener"
                 >{{ social.network }}</a
