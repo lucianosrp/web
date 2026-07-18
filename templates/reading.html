@@ -2,8 +2,11 @@
 %}
 <section class="reading">
     <h1>// reading list</h1>
+    {% set data = load_data(path="content/data/books.yaml") %}
+    {% if data.description %}
+    <p class="reading-intro">{{ data.description }}</p>
+    {% endif %}
     <ul class="books">
-        {% set data = load_data(path="content/data/books.yaml") %}
         {% set sorted_books = data.books | sort(attribute="date") | reverse %}
         {% for book in sorted_books %}
         <li class="book-item">

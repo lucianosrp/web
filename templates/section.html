@@ -4,7 +4,12 @@
   <h1>{{ section.title }}</h1>
   <ul>
     {% for page in section.pages %}
-    <li>
+    <li{% if page.extra.cover %} class="has-thumb"{% endif %}>
+      {% if page.extra.cover %}
+      <a href="{{ page.permalink | safe }}" class="post-thumb" tabindex="-1" aria-hidden="true">
+        <img src="{{ page.extra.cover }}" alt="" loading="lazy">
+      </a>
+      {% endif %}
       <div class="post-meta">
         <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
         <span class="post-info">
