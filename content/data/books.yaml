@@ -1,7 +1,11 @@
+description: >-
+  Recent books I have been reading and whose progress I am tracking
+  (not a complete list).
+
 books:
   - title: "Le Comte de Monte-Cristo"
     date: 2025-11-25
-    progress: 45
+    progress: 69
     author: "Alexandre Dumas"
   - title: "Free to Choose"
     date: 2025-06-02

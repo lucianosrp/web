@@ -3,6 +3,10 @@ title = "The airport compass"
 date = 2024-02-25
 draft = false
 tags = ["Python", "Aviation", "Visualization"]
+
+[extra]
+cover = "/assets/img/airport-compass/Where-is-it-going-15.png"
+cover_alt = "Polar histograms of runway orientations for airports worldwide"
 +++
 
 A few years ago, I got inspired by a very interesting figure published on a paper by [Geoff Boeing](https://github.com/gboeing) called ["Urban spatial order: street network orientation, configuration, and entropy"](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0189-1).

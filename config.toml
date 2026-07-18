@@ -11,7 +11,12 @@ feed_limit = 10
 taxonomies = [{ name = "tags" }]
 
 [markdown]
-highlighting = { theme = "github-dark" }
+highlighting = { style = "inline", light_theme = "gruvbox-light-medium", dark_theme = "gruvbox-dark-medium" }
+smart_punctuation = true
+lazy_async_image = true
+external_links_target_blank = true
+external_links_class = "external"
+insert_anchor_links = "right"
 
 [extra]
 github = "https://github.com/lucianosrp"

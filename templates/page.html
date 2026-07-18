@@ -1,6 +1,21 @@
 {% extends "base.html" %}
+
+{% block twitter_card %}summary_large_image{% endblock %}
+
+{% block head %}
+{% set og_img = get_url(path="og/" ~ page.slug ~ ".png") %}
+<meta property="og:image" content="{{ og_img | safe }}">
+<meta name="twitter:image" content="{{ og_img | safe }}">
+{% endblock %}
+
 {% block content %}
+<div class="reading-progress" aria-hidden="true"></div>
 <article>
+  {% if page.extra.cover %}
+  <figure class="post-cover">
+    <img src="{{ page.extra.cover }}" alt="{{ page.extra.cover_alt | default(value=page.title) }}">
+  </figure>
+  {% endif %}
   <header>
     <h1>{{ page.title }}</h1>
     <ul class="post-meta">
@@ -43,4 +58,25 @@
     {% endif %}
   </nav>
 </article>
+
+<script>
+document.querySelectorAll('pre > code').forEach(code => {
+  const pre = code.parentElement;
+  const wrap = document.createElement('div');
+  wrap.className = 'code-card';
+  pre.replaceWith(wrap);
+  wrap.appendChild(pre);
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.type = 'button';
+  btn.textContent = 'copy';
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(code.innerText).then(() => {
+      btn.textContent = 'copied!';
+      setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+    });
+  });
+  wrap.appendChild(btn);
+});
+</script>
 {% endblock %}
