@@ -3,9 +3,13 @@ description: >-
   (not a complete list).
 
 books:
+  - title: "Libercomunismo"
+    date: 2025-11-30
+    progress: 100
+    author: "Emiliano Brancaccio"
   - title: "Le Comte de Monte-Cristo"
     date: 2025-11-25
-    progress: 69
+    progress: 100
     author: "Alexandre Dumas"
   - title: "Free to Choose"
     date: 2025-06-02
