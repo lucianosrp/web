@@ -3,8 +3,12 @@ description: >-
   (not a complete list).
 
 books:
+  - title: "If Anyone Builds It, Everyone Dies"
+    date: 2026-09-03
+    progress: 33
+    author: "Emiliano Brancaccio"
   - title: "Libercomunismo"
-    date: 2025-11-30
+    date: 2026-09-03
     progress: 100
     author: "Emiliano Brancaccio"
   - title: "Le Comte de Monte-Cristo"
