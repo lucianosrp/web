@@ -5,8 +5,8 @@ description: >-
 books:
   - title: "If Anyone Builds It, Everyone Dies"
     date: 2026-09-03
-    progress: 33
-    author: "Emiliano Brancaccio"
+    progress: 45
+    author: "Eliezer Yudkowsky and Nate Soares"
   - title: "Libercomunismo"
     date: 2026-09-03
     progress: 100
