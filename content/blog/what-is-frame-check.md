@@ -1,11 +1,12 @@
-+++
-title = "What is Frame Check?"
-date = "2026-05-11"
-draft = false
-description = "The story behind frame-check, a static checker for dataframe code that grew out of a PyCon Hong Kong sprint, Narwhals and an interest in LSPs."
-[taxonomies]
-tags = ["GitHub", "Python"]
-+++
+---
+title: What is Frame Check?
+date: 2026-05-11
+draft: false
+description: The story behind frame-check, a static checker for dataframe code that
+  grew out of a PyCon Hong Kong sprint, Narwhals and an interest in LSPs.
+taxonomies:
+  tags: [GitHub, Python]
+---
 
 It all started at PyCon Hong Kong 2025 where I was asked if I had ideas for a sprint.
 Back then, I'd had some experience contributing to Narwhals, which is a compatibility layer for dataframe libraries.

@@ -1,16 +1,14 @@
-+++
-title = "The airport compass"
-date = 2024-02-25
-draft = false
-description = "Plotting runway orientations of the world's busiest airports as polar histograms, inspired by Geoff Boeing's street-network entropy figures."
-
-[taxonomies]
-tags = ["Python", "Aviation", "Visualization"]
-
-[extra]
-cover = "/assets/img/airport-compass/Where-is-it-going-15.webp"
-cover_alt = "Polar histograms of runway orientations for airports worldwide"
-+++
+---
+title: The airport compass
+date: 2024-02-25
+draft: false
+description: Plotting runway orientations of the world's busiest airports as polar
+  histograms, inspired by Geoff Boeing's street-network entropy figures.
+taxonomies:
+  tags: [Python, Aviation, Visualization]
+extra: {cover: /assets/img/airport-compass/Where-is-it-going-15.webp, cover_alt: Polar
+    histograms of runway orientations for airports worldwide}
+---
 
 A few years ago, I got inspired by a very interesting figure published on a paper by [Geoff Boeing](https://github.com/gboeing) called ["Urban spatial order: street network orientation, configuration, and entropy"](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0189-1).
 
@@ -182,7 +180,3 @@ This visualization reveals interesting patterns about global air travel:
 3. **Regional vs international** — Some airports (like in the Middle East) show a balanced spread, reflecting their role as connecting hubs between multiple continents.
 
 These patterns emerge naturally from the data and tell a story about how geography and market demand shape air traffic.
-
-<!-- TODO: Where-is-it-going-30.png in static/ is a saved HTML page, not an image — re-export it and restore:
-![30 Airports view](/assets/img/airport-compass/Where-is-it-going-30.png)
--->

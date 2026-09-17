@@ -1,16 +1,13 @@
-+++
-title = "What setup do I use?"
-date = 2026-07-17
-draft = false
-description = "The hardware and software behind my daily setup — Zellij included — and the decision-making process that got me here."
-
-[taxonomies]
-tags = ["Programming"]
-
-[extra]
-cover = "/assets/img/setup/setup.webp"
-cover_alt = "My desk setup"
-+++
+---
+title: What setup do I use?
+date: 2026-07-17
+draft: false
+description: The hardware and software behind my daily setup — Zellij included — and
+  the decision-making process that got me here.
+taxonomies:
+  tags: [Programming]
+extra: {cover: /assets/img/setup/setup.webp, cover_alt: My desk setup}
+---
 
 I have often talked about Zellij (my last two talks, at the Rust Meetup and OpenSource Hong Kong, were about it), but I never showed my actual setup.
 

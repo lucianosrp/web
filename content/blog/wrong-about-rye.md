@@ -1,11 +1,12 @@
-+++
-title = "I was wrong about Rye"
-date = 2024-03-14
-draft = false
-description = "Correcting what I said about Rye's virtual environments and IDE support in my Python tools post."
-[taxonomies]
-tags = ["Python"]
-+++
+---
+title: I was wrong about Rye
+date: 2024-03-14
+draft: false
+description: Correcting what I said about Rye's virtual environments and IDE support
+  in my Python tools post.
+taxonomies:
+  tags: [Python]
+---
 
 While talking about Rye in my post on Python tools, I wrote that the lack of implementations for VS Code or PyCharm made me reluctant to adopt it full time.
 

@@ -1,11 +1,12 @@
-+++
-title = "Python tools I use"
-date = 2024-01-10
-draft = false
-description = "A look at the new wave of Python tooling written in Rust — Ruff, Rye and uv — what I actually use, and what I'm still holding off on."
-[taxonomies]
-tags = ["Python", "Tooling"]
-+++
+---
+title: Python tools I use
+date: 2024-01-10
+draft: false
+description: A look at the new wave of Python tooling written in Rust — Ruff, Rye
+  and uv — what I actually use, and what I'm still holding off on.
+taxonomies:
+  tags: [Python, Tooling]
+---
 
 As previously mentioned in this blog, Rust is becoming more and more used in Python libraries such as Pydantic and Polars. But recently we are also getting python tools written in Rust!
 

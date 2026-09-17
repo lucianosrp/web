@@ -1,11 +1,12 @@
-+++
-title = "Switching to Rust as a Python developer"
-date = 2024-02-02
-draft = false
-description = "The Rust features I enjoy most as a Python developer, and why Rust is the language I'd recommend learning in 2024."
-[taxonomies]
-tags = ["Rust", "Python"]
-+++
+---
+title: Switching to Rust as a Python developer
+date: 2024-02-02
+draft: false
+description: The Rust features I enjoy most as a Python developer, and why Rust is
+  the language I'd recommend learning in 2024.
+taxonomies:
+  tags: [Rust, Python]
+---
 
 Learning Rust for the past months has been one best learning experiences I have had since learning Python. If you have to pick a new language to learn in 2024, I would definitely recommend Rust!
 

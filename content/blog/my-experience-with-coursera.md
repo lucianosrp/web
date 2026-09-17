@@ -1,11 +1,13 @@
-+++
-title = "My first experience with Coursera"
-date = 2024-04-06
-draft = false
-description = "Trying Coursera after years of learning from YouTube and plain-text tutorials: first impressions, and whether the course and the certificate are worth it."
-[taxonomies]
-tags = ["Python", "Learning"]
-+++
+---
+title: My first experience with Coursera
+date: 2024-04-06
+draft: false
+description: 'Trying Coursera after years of learning from YouTube and plain-text
+  tutorials: first impressions, and whether the course and the certificate are worth
+  it.'
+taxonomies:
+  tags: [Python, Learning]
+---
 
 ## Why Coursera?
 

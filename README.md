@@ -4,35 +4,43 @@ Personal blog, built with [Zola](https://www.getzola.org/) (`zola 0.23+`).
 
 ## Writing
 
-Posts are drafted in the Obsidian vault (`~/notes/blog/`, the staging area) and
-synced here when ready. Front matter:
+Posts are written in the Obsidian vault (`~/notes/blog/`) as plain Obsidian markdown and synced
+here with one command (run from this repo):
 
-```toml
-+++
-title = "Post title"
-date = "2026-01-31"
-draft = true                      # hides the post from production builds
-description = "One line shown in the post list, <meta description> and social cards."
-updated = "2026-02-10"            # optional, shows "updated" in post-meta
-[taxonomies]
-tags = ["Python", "AI"]
-[extra]
-cover = "/assets/img/<slug>/hero.webp"   # optional hero + list thumbnail + og card photo
-cover_alt = "Alt text for the hero"
-+++
+```bash
+python scripts/stage.py "Post title"            # vault -> content/blog/<slug>.md
+python scripts/stage.py "Post title" --publish  # also draft: false + tick the vault tracker
+python scripts/stage.py --all                   # re-sync every published post
 ```
 
-Conventions:
+Vault front matter is ordinary Obsidian YAML:
 
-- Slug = filename (`kebab-case.md`).
-- Local images go in `static/assets/img/<slug>/`, preferably **webp**. Use the `img` component so
-  the browser knows the dimensions (no layout shift):
-  `{{ <img src="/assets/img/<slug>/pic.webp" alt="..." caption="optional" /> }}`
-  (SVGs: plain markdown `![alt](/assets/...)`, `get_image_metadata` doesn't read them.)
+```yaml
+---
+title: Post title
+date: 2026-01-31
+draft: true                 # hidden from production builds
+description: One line for the post list, <meta description> and social cards.
+tags: [Python, AI]
+cover: /assets/img/<slug>/hero.webp   # optional hero + list thumbnail + og card photo
+cover_alt: Alt text for the hero
+updated: 2026-02-10         # optional, shows "updated" in post-meta
+slug: custom-slug           # optional, default is the slugified title
+---
+```
+
+`stage.py` translates Obsidian syntax on the way in: `{reviewer notes}` and `%% comments %%` are
+removed, inline `#tags` become tag links (and are added to the post's tags), `[[#Heading]]` /
+`[[Other post]]` become links, `![[image.png]]` is copied to `static/assets/img/<slug>/`
+(png/jpg → webp) and rendered with the `img` component, `> [!note]` callouts become blockquotes,
+`==text==` becomes `<mark>`. Content is Tera-templated (Zola 0.23), so literal `{{`/`{%` are escaped.
+
+Notes:
+
+- Slug = filename in `content/blog/`, derived from the title.
+- SVGs stay plain markdown (`get_image_metadata` can't read them).
 - Footnotes (`[^1]`) are collected at the bottom of the post and get a hover preview.
-- Headings get a table of contents automatically when there is more than one.
-- Same-page links: `[text](#heading-slug)`.
-- Content is Tera-templated (Zola 0.23): literal `{{`/`{%` in a post must be wrapped in `{% raw %}…{% endraw %}`.
+- A table of contents is generated automatically when a post has more than one heading.
 
 ## Social cards
 
