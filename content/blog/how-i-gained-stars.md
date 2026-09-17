@@ -2,6 +2,8 @@
 title = "How I gained my first 100+ stars on GitHub"
 date = 2024-06-26
 draft = false
+description = "How an awesome-list repository earned my first 100+ GitHub stars, and what it taught me about open-source visibility."
+[taxonomies]
 tags = ["Aviation", "GitHub"]
 +++
 

@@ -17,6 +17,7 @@ lazy_async_image = true
 external_links_target_blank = true
 external_links_class = "external"
 insert_anchor_links = "right"
+bottom_footnotes = true
 
 [extra]
 github = "https://github.com/lucianosrp"

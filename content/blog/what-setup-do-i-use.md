@@ -2,6 +2,9 @@
 title = "What setup do I use?"
 date = 2026-07-17
 draft = false
+description = "The hardware and software behind my daily setup — Zellij included — and the decision-making process that got me here."
+
+[taxonomies]
 tags = ["Programming"]
 
 [extra]

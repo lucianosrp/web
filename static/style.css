@@ -1,3 +1,29 @@
+/* --- Self-hosted fonts (static/fonts, subset to Latin, variable weight 400–600) --- */
+
+@font-face {
+  font-family: "Newsreader";
+  src: url("/fonts/newsreader.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Newsreader";
+  src: url("/fonts/newsreader-italic.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/geist-mono.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #faf9f7;
   --text: #1c1b1a;
@@ -44,7 +70,7 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.7;
-  max-width: 75ch;
+  max-width: 84ch;
   margin: 0 auto;
   padding: 3rem 1.5rem;
   min-height: 100vh;
@@ -65,6 +91,43 @@ body {
 p {
   margin-bottom: 1.5rem;
   text-wrap: pretty;
+}
+
+/* Article prose is justified; hyphenation keeps word spacing even (no rivers) */
+article p,
+article li,
+article blockquote {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 7 3 3;   /* only hyphenate words >= 7 chars, >= 3 on each side */
+  hyphenate-limit-lines: 2;
+}
+
+/* Short lines: short paragraphs and the last line should not be stretched */
+article p:last-child,
+article li p {
+  text-align-last: left;
+}
+
+/* Never justify code, tables, meta or the notes section */
+article pre, article code, article table,
+article .post-meta, article .footnotes, article .toc {
+  text-align: left;
+  hyphens: none;
+}
+
+/* A little more air between paragraphs; a bit more inside sections */
+article p {
+  margin-bottom: 1.6rem;
+}
+
+/* Narrow screens: justification produces rivers, fall back to ragged right */
+@media (max-width: 640px) {
+  article p, article li, article blockquote {
+    text-align: left;
+  }
 }
 
 a {
@@ -180,8 +243,8 @@ main {
 /* Article prose reads in Newsreader; site chrome stays mono */
 article {
   font-family: var(--font-serif);
-  font-size: 1.1rem;
-  line-height: 1.65;
+  font-size: 1.15rem;
+  line-height: 1.7;
 }
 
 article em {
@@ -837,14 +900,40 @@ footer {
   padding: 1rem 1.25rem;
 }
 
-.toc h2 {
+/* Header doubles as the collapse toggle */
+.toc summary {
   font-size: 0.75rem;
-  font-weight: 400;
   color: var(--text-muted);
-  margin: 0 0 0.75rem;
   text-transform: lowercase;
   letter-spacing: 0.1em;
-  font-family: var(--font-mono);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.toc summary::-webkit-details-marker {
+  display: none;
+}
+
+.toc summary::after {
+  content: '[+]';
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.toc[open] summary {
+  margin-bottom: 0.75rem;
+}
+
+.toc[open] summary::after {
+  content: '[-]';
+}
+
+.toc summary:hover {
+  color: var(--text);
 }
 
 .toc ul {
@@ -853,33 +942,35 @@ footer {
   margin: 0;
 }
 
-.toc ul ul {
-  padding-left: 1rem;
-}
-
 .toc li {
   margin-bottom: 0.35rem;
   line-height: 1.4;
 }
 
+/* Top level: '//' marker, sub-list wraps onto its own row below */
 .toc > ul > li {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0 0.5rem;
 }
 
 .toc > ul > li::before {
   content: '//';
   color: var(--accent);
-  font-family: var(--font-mono);
   font-size: 0.7rem;
+}
+
+.toc ul ul {
+  flex-basis: 100%;
+  padding-left: 1.1rem;
+  margin-top: 0.35rem;
 }
 
 .toc ul ul li {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding-left: 1rem;
 }
 
 .toc ul ul li::before {
@@ -890,10 +981,19 @@ footer {
 .toc a {
   color: var(--text-muted);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .toc a:hover {
   color: var(--accent);
+}
+
+/* Section currently in view (set by scroll-spy in page.html) */
+.toc a.active {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
 }
 
 /* --- Post navigation --- */
@@ -1186,6 +1286,273 @@ footer {
     border-left: none;
     border-right: none;
   }
+}
+
+/* --- Skip link (keyboard users) --- */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 100;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* --- Post tags (under post-meta) --- */
+
+.post-tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  padding: 0;
+  margin: 0.4rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.post-tags a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.post-tags a:hover {
+  color: var(--accent);
+}
+
+/* --- One-line description in post lists --- */
+
+.posts .post-desc {
+  margin: 0.35rem 0 0.2rem;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* --- Code block language label (top-left, pairs with copy button) --- */
+
+.code-card code[data-lang]:not([data-lang=""]) {
+  padding-top: 1.75rem;
+}
+
+.code-card code[data-lang]:not([data-lang=""])::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0.35rem;
+  left: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  color: var(--text-muted);
+}
+
+/* --- Heading anchors: no hover on touch, so keep them faintly visible --- */
+
+@media (hover: none) {
+  .zola-anchor {
+    opacity: 0.35;
+  }
+}
+
+/* --- Figures from the img shortcode --- */
+
+.post-figure {
+  margin: 1.5rem 0;
+}
+
+.post-figure img {
+  margin: 0;
+}
+
+.post-figure figcaption {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* --- Prose justification: flush right margin, hyphenated so no rivers of whitespace --- */
+
+article p,
+article li,
+article blockquote p,
+.footnotes-list li p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 7 3 3;   /* only hyphenate words of 7+ letters, min 3 each side */
+  overflow-wrap: break-word;
+}
+
+/* Short/narrow lines look worse justified: keep TOC, meta and phones ragged */
+@media (max-width: 640px) {
+  article p,
+  article li,
+  article blockquote p,
+  .footnotes-list li p {
+    text-align: left;
+    hyphens: manual;
+  }
+}
+
+/* --- Wide screens: code blocks, figures and cover break out of the text column --- */
+
+@media (min-width: 1100px) {
+  article .code-card,
+  article .post-figure,
+  article .post-cover,
+  article > pre {
+    margin-left: -3.5rem;
+    margin-right: -3.5rem;
+  }
+}
+
+/* --- Footnotes --- */
+
+/* Inline markers: mono, accent, [n] like the rest of the site chrome */
+.footnote-reference {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  line-height: 0;
+  vertical-align: super;
+  margin-left: 0.1em;
+}
+
+.footnote-reference a {
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0 0.15em;
+  border-radius: 2px;
+}
+
+.footnote-reference a:hover,
+.footnote-reference:target a {
+  background: var(--accent-soft);
+}
+
+/* Hover preview of the note (desktop / pointer devices only) */
+.footnote-popover {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(24rem, calc(100vw - 2rem));
+  margin-bottom: 0.6rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--text);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 10;
+}
+
+/* Bridge the gap between marker and card so the hover doesn't drop */
+.footnote-popover::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 0.8rem;
+}
+
+.footnote-reference:hover .footnote-popover,
+.footnote-reference:focus-within .footnote-popover {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (hover: none) {
+  .footnote-popover {
+    display: none;
+  }
+}
+
+/* Notes section at the bottom of the post */
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.footnotes::before {
+  content: '// notes';
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.footnotes-list {
+  list-style: none;
+  counter-reset: fn;
+  padding: 0;
+  margin: 0;
+}
+
+.footnotes-list li {
+  counter-increment: fn;
+  position: relative;
+  padding: 0.25rem 0.5rem 0.25rem 2.75rem;
+  margin: 0 -0.5rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.4s ease;
+}
+
+.footnotes-list li::before {
+  content: '[' counter(fn) ']';
+  position: absolute;
+  left: 0.5rem;
+  top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.footnotes-list li p {
+  margin-bottom: 0;
+}
+
+/* Highlight the note you just jumped to */
+.footnotes-list li:target {
+  background: var(--accent-soft);
+}
+
+/* Back-to-text arrow */
+.footnotes-list a[href*="#fr-"] {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  text-decoration: none;
+  margin-left: 0.25em;
+}
+
+.footnotes-list a[href*="#fr-"]:hover {
+  text-decoration: underline;
 }
 
 /* --- Motion preferences --- */

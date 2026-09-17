@@ -2,10 +2,13 @@
 title = "The airport compass"
 date = 2024-02-25
 draft = false
+description = "Plotting runway orientations of the world's busiest airports as polar histograms, inspired by Geoff Boeing's street-network entropy figures."
+
+[taxonomies]
 tags = ["Python", "Aviation", "Visualization"]
 
 [extra]
-cover = "/assets/img/airport-compass/Where-is-it-going-15.png"
+cover = "/assets/img/airport-compass/Where-is-it-going-15.webp"
 cover_alt = "Polar histograms of runway orientations for airports worldwide"
 +++
 
@@ -28,15 +31,15 @@ I made the source-code available on my GitHub [here](https://github.com/lucianos
 
 I first generated the top 15 airports by number of destinations. Each chart (or compass) displays the distribution of outbound flights and aligns those for each initial bearing. The longer the yellow bar, the more frequently that bearing occurs. For example, if an airport has most of the departures pointing West (or 270°), you would see the longest bar pointing left.
 
-![15 Airports view](/assets/img/airport-compass/Where-is-it-going-15.png)
+{{ <img src="/assets/img/airport-compass/Where-is-it-going-15.webp" alt="15 Airports view" /> }}
 
 Some airports like New York JFK and London Heathrow (LHR) represent an important hub for transatlantic flights. In these charts, we can see how LHR has a long bar towards the West (towards North America) and JFK has one towards the East (Europe).
 
-![LHR](/assets/img/airport-compass/LHR-dark.png)
+{{ <img src="/assets/img/airport-compass/LHR-dark.png" alt="LHR" /> }}
 
 Other airports' compasses, instead, are majorly driven by the geographical constrains of their location. Tokyo's Narita Intl. Airport is a very good example to illustrate this case. It has virtually no routes pointing eastwards! This is because Japan has the Pacific Ocean to its east side and most of the routes connecting Japan to North America take an initial bearing pointing North! (Since this would be the shortest great circle path)
 
-![NRT](/assets/img/airport-compass/NRT-dark.png)
+{{ <img src="/assets/img/airport-compass/NRT-dark.png" alt="NRT" /> }}
 
 ## How-to
 
@@ -180,4 +183,6 @@ This visualization reveals interesting patterns about global air travel:
 
 These patterns emerge naturally from the data and tell a story about how geography and market demand shape air traffic.
 
+<!-- TODO: Where-is-it-going-30.png in static/ is a saved HTML page, not an image — re-export it and restore:
 ![30 Airports view](/assets/img/airport-compass/Where-is-it-going-30.png)
+-->

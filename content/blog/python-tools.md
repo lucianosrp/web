@@ -2,6 +2,7 @@
 title = "Python tools I use"
 date = 2024-01-10
 draft = false
+description = "A look at the new wave of Python tooling written in Rust — Ruff, Rye and uv — what I actually use, and what I'm still holding off on."
 [taxonomies]
 tags = ["Python", "Tooling"]
 +++

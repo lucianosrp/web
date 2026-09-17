@@ -104,6 +104,13 @@ def render(slug: str, title: str, date: str, cover: str | None = None) -> None:
         "-geometry",
         "+80+540",
         "-composite",
+        # keep cards small: strip metadata, max compression, palette for photo cards
+        "-strip",
+        "-depth",
+        "8",
+        "-define",
+        "png:compression-level=9",
+        *(["-colors", "256"] if cover else []),
         str(dest),
     ]
     subprocess.run(cmd, check=True)

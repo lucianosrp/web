@@ -3,27 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{{ config.title }}{% endblock %}</title>
-  <meta name="description" content="{{ config.description }}">
+  {#- Page-aware metadata: title / description / og:type -#}
+  {%- if page is defined %}
+    {%- set meta_title = page.title ~ " — " ~ config.title %}
+    {%- if page.description %}{% set meta_desc = page.description %}
+    {%- else %}{% set meta_desc = page.content | striptags | replace(from="\n", to=" ") | truncate(length=160) | trim %}{% endif %}
+    {%- set og_type = "article" %}
+  {%- elif term is defined %}
+    {%- set meta_title = "tag: " ~ term.name ~ " — " ~ config.title %}
+    {%- set meta_desc = config.description %}
+    {%- set og_type = "website" %}
+  {%- elif section is defined and section.title %}
+    {%- set meta_title = section.title ~ " — " ~ config.title %}
+    {%- if section.description %}{% set meta_desc = section.description %}{% else %}{% set meta_desc = config.description %}{% endif %}
+    {%- set og_type = "website" %}
+  {%- else %}
+    {%- set meta_title = config.title %}
+    {%- set meta_desc = config.description %}
+    {%- set og_type = "website" %}
+  {%- endif %}
+  <title>{{ meta_title }}</title>
+  <meta name="description" content="{{ meta_desc }}">
   <meta name="author" content="{{ config.author }}">
+  {% if current_url is defined %}<link rel="canonical" href="{{ current_url | safe }}">{% endif %}
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='16' font-family='monospace' font-size='16'>[////]</text></svg>">
 
   <link rel="alternate" type="application/atom+xml" title="Atom feed" href="/atom.xml">
 
-  <meta property="og:title" content="{% block og_title %}{{ config.title }}{% endblock %}">
-  <meta property="og:description" content="{{ config.description }}">
-  <meta property="og:url" content="{{ current_url | default(value=config.base_url) }}">
-  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ config.title }}">
+  <meta property="og:title" content="{{ meta_title }}">
+  <meta property="og:description" content="{{ meta_desc }}">
+  <meta property="og:url" content="{{ current_url | default(value=config.base_url) | safe }}">
+  <meta property="og:type" content="{{ og_type }}">
 
   <meta name="twitter:card" content="{% block twitter_card %}summary{% endblock %}">
 
   <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1a1815" media="(prefers-color-scheme: dark)">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  {#- Fonts are self-hosted (see static/fonts, @font-face in style.css) -#}
+  <link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 
   <link rel="stylesheet" href="/style.css">
    <script type="speculationrules">
@@ -38,6 +59,7 @@
    {% block head %}{% endblock %}
 </head>
 <body>
+  <a class="skip-link" href="#main">skip to content</a>
    <header>
      {% if current_path is defined %}
        {% set path = current_path %}
@@ -55,7 +77,7 @@
        <a href="/atom.xml" class="rss" aria-label="RSS feed">rss</a>
      </nav>
    </header>
-  <main>
+  <main id="main">
     {% block content %}{% endblock %}
   </main>
   <footer>

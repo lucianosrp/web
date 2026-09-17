@@ -2,6 +2,7 @@
 title = "What is Frame Check?"
 date = "2026-05-11"
 draft = false
+description = "The story behind frame-check, a static checker for dataframe code that grew out of a PyCon Hong Kong sprint, Narwhals and an interest in LSPs."
 [taxonomies]
 tags = ["GitHub", "Python"]
 +++

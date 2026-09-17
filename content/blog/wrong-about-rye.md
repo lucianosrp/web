@@ -2,6 +2,8 @@
 title = "I was wrong about Rye"
 date = 2024-03-14
 draft = false
+description = "Correcting what I said about Rye's virtual environments and IDE support in my Python tools post."
+[taxonomies]
 tags = ["Python"]
 +++
 

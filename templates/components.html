@@ -1,0 +1,11 @@
+{#- Reusable Tera components (Zola 0.23+). Usable in templates and in markdown content. -#}
+
+{#- Local image with intrinsic width/height so the browser reserves space (no layout shift).
+    In markdown:  {{ <img src="/assets/img/<slug>/pic.webp" alt="..." caption="optional" /> }} -#}
+{% component img(src, alt="", caption="") %}
+{%- set meta = get_image_metadata(path="static" ~ src) -%}
+<figure class="post-figure">
+  <img src="{{ src }}" alt="{{ alt }}" width="{{ meta.width }}" height="{{ meta.height }}" loading="lazy" decoding="async">
+  {%- if caption %}<figcaption>{{ caption }}</figcaption>{% endif %}
+</figure>
+{% endcomponent img %}

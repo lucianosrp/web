@@ -5,15 +5,21 @@
 {% block head %}
 {% set og_img = get_url(path="og/" ~ page.slug ~ ".png") %}
 <meta property="og:image" content="{{ og_img | safe }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:image" content="{{ og_img | safe }}">
+<meta property="article:published_time" content="{{ page.date }}">
+{% if page.updated %}<meta property="article:modified_time" content="{{ page.updated }}">{% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="reading-progress" aria-hidden="true"></div>
 <article>
   {% if page.extra.cover %}
+  {% set cover_meta = get_image_metadata(path="static" ~ page.extra.cover) %}
   <figure class="post-cover">
-    <img src="{{ page.extra.cover }}" alt="{{ page.extra.cover_alt | default(value=page.title) }}">
+    <img src="{{ page.extra.cover }}" alt="{{ page.extra.cover_alt | default(value=page.title) }}"
+         width="{{ cover_meta.width }}" height="{{ cover_meta.height }}" fetchpriority="high" decoding="async">
   </figure>
   {% endif %}
   <header>
@@ -24,12 +30,26 @@
       <li><time datetime="{{ page.date }}">{{ page.date | date(format="%Y.%m.%d") }}</time></li>
       <li>::</li>
       <li>{{ page.reading_time }} min read</li>
+      {% if page.updated %}
+      <li>::</li>
+      <li>updated <time datetime="{{ page.updated }}">{{ page.updated | date(format="%Y.%m.%d") }}</time></li>
+      {% endif %}
     </ul>
+    {% if page.taxonomies.tags %}
+    <ul class="post-tags">
+      {% for tag in page.taxonomies.tags %}
+      <li><a href="{{ get_taxonomy_url(kind="tags", term=tag) | safe }}">#{{ tag | lower }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
   </header>
 
   {% if page.toc %}
-  <nav class="toc">
-    <h2>// contents</h2>
+  {% set toc_len = page.toc | length %}
+  {% set toc_first = page.toc | first %}
+  {% if toc_len > 1 or toc_first.children %}
+  <details class="toc" open>
+    <summary>// contents</summary>
     <ul>
       {% for h1 in page.toc %}
       <li>
@@ -44,7 +64,8 @@
       </li>
       {% endfor %}
     </ul>
-  </nav>
+  </details>
+  {% endif %}
   {% endif %}
 
   {{ page.content | safe }}
@@ -78,5 +99,34 @@ document.querySelectorAll('pre > code').forEach(code => {
   });
   wrap.appendChild(btn);
 });
+
+// Footnote hover previews: clone each note into a popover under its marker
+document.querySelectorAll('.footnote-reference a').forEach(ref => {
+  const note = document.getElementById(ref.getAttribute('href').split('#')[1]);
+  if (!note) return;
+  const pop = document.createElement('span');
+  pop.className = 'footnote-popover';
+  pop.setAttribute('role', 'tooltip');
+  pop.innerHTML = note.querySelector('p').innerHTML;
+  pop.querySelector('a[href*="#fr-"]')?.remove();
+  ref.parentElement.appendChild(pop);
+});
+
+// TOC scroll-spy: mark the section currently being read
+const tocLinks = [...document.querySelectorAll('.toc a[href*="#"]')];
+const tocHeads = tocLinks.map(a => document.getElementById(decodeURIComponent(a.hash.slice(1)))).filter(Boolean);
+if (tocHeads.length) {
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    let active = tocHeads[0];
+    for (const h of tocHeads) {
+      if (h.getBoundingClientRect().top <= 120) active = h; else break;
+    }
+    tocLinks.forEach(a => a.classList.toggle('active', a.hash.slice(1) === active.id));
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+}
 </script>
 {% endblock %}
