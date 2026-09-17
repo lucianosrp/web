@@ -46,7 +46,8 @@
   <link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 
-  <link rel="stylesheet" href="/style.css">
+  {#- content hash as a cache-buster so browsers pick up new CSS on every deploy -#}
+  <link rel="stylesheet" href="/style.css?v={{ get_hash(path="static/style.css", sha_type=256, base64=false) | truncate(length=8, end="") }}">
    <script type="speculationrules">
    {
      "prerender": [{
