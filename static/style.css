@@ -1017,6 +1017,87 @@ article .toc li {
   color: var(--text);
 }
 
+/* --- Section bar: sticky "Section › Subsection" on screens without the rail --- */
+
+.section-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+  /* line up with the 84ch text column (84ch of the 18px mono ≈ 50.4rem) */
+  padding: 0.7rem max(1.5rem, calc((100vw - 50.4rem) / 2 + 1.5rem)) 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px dashed var(--border);
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition: transform 0.2s ease, visibility 0.2s;
+}
+
+.section-bar.show {
+  transform: none;
+  visibility: visible;
+}
+
+.section-bar a {
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.section-bar .sb-h2 {
+  flex-shrink: 1;
+  max-width: 45%;
+  color: var(--text-muted);
+}
+
+.section-bar .sb-h2::before {
+  content: '// ';
+  color: var(--accent);
+}
+
+.section-bar .sb-h3 {
+  flex: 1;
+  color: var(--text);
+}
+
+.section-bar .sb-sep {
+  color: var(--accent);
+}
+
+/* Only a top-level section: show it at full strength, no separator */
+.section-bar:not(.has-sub) .sb-sep,
+.section-bar:not(.has-sub) .sb-h3 {
+  display: none;
+}
+
+.section-bar:not(.has-sub) .sb-h2 {
+  max-width: none;
+  color: var(--text);
+}
+
+/* Headings jumped to (TOC links, j/k) land below the bar */
+article :is(h2, h3, h4)[id] {
+  scroll-margin-top: 3.5rem;
+}
+
+@media (min-width: 1400px) {
+  .section-bar {
+    display: none;
+  }
+}
+
 /* Rail extras (title, ASCII progress, key hint) only exist on wide screens */
 .rail-title,
 .rail-progress,

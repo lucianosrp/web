@@ -48,6 +48,7 @@
   {% set toc_len = page.toc | length %}
   {% set toc_first = page.toc | first %}
   {% if toc_len > 1 or toc_first.children %}
+  <div class="section-bar" aria-hidden="true"><a class="sb-h2" tabindex="-1"></a><span class="sb-sep">&rsaquo;</span><a class="sb-h3" tabindex="-1"></a></div>
   <aside class="toc-rail" data-minutes="{{ page.reading_time }}" data-permalink="{{ page.permalink | safe }}">
   <div class="rail-inner">
   <a class="rail-title" href="#">{{ page.title }}</a>
@@ -175,6 +176,29 @@ const tocItems = [...document.querySelectorAll('.toc a[href*="#"]')]
   .filter(t => t.h);
 const levels = tocItems.map(t => +t.h.tagName[1]);
 const contentEnd = document.querySelector('.post-nav') || document.querySelector('article');
+
+// Narrow screens: a sticky "Section › Subsection" bar replaces the rail
+const sectionBar = document.querySelector('.section-bar');
+const sbLinks = sectionBar ? [sectionBar.querySelector('.sb-h2'), sectionBar.querySelector('.sb-h3')] : [];
+let sbKey = '';
+const updateSectionBar = (active, reading, endTop) => {
+  if (!sectionBar) return;
+  let parent = -1;
+  for (let j = active - 1; j >= 0 && levels[active] > levels[0]; j--) {
+    if (levels[j] < levels[active]) { parent = j; break; }
+  }
+  const trail = parent >= 0 ? [tocItems[parent], tocItems[active]] : [tocItems[active]];
+  const key = trail.map(t => t.h.id).join();
+  if (key !== sbKey) {
+    sbKey = key;
+    sbLinks.forEach((a, i) => {
+      a.textContent = trail[i] ? trail[i].a.textContent : '';
+      if (trail[i]) a.href = trail[i].a.getAttribute('href'); else a.removeAttribute('href');
+    });
+    sectionBar.classList.toggle('has-sub', trail.length > 1);
+  }
+  sectionBar.classList.toggle('show', reading && endTop > sectionBar.offsetHeight);
+};
 let ticking = false;
 const update = () => {
   ticking = false;
@@ -204,6 +228,7 @@ const update = () => {
   });
   tocItems.forEach((t, i) => t.a.classList.toggle('active', i === active));
   activeId = tops[0] <= READ_LINE ? tocItems[active].h.id : null;
+  updateSectionBar(active, activeId !== null, endTop);
 };
 let activeId = null;
 const schedule = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
