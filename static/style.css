@@ -448,7 +448,7 @@ a.external::after {
   vertical-align: super;
 }
 
-/* Reading progress bar (scroll-driven, no JS; invisible where unsupported) */
+/* Reading progress bar (driven by the scroll handler in page.html) */
 .reading-progress {
   position: fixed;
   top: 0;
@@ -461,37 +461,50 @@ a.external::after {
   z-index: 100;
 }
 
-@supports (animation-timeline: scroll()) {
-  .reading-progress {
-    animation: reading-progress linear both;
-    animation-timeline: scroll(root);
-  }
-}
-
-@keyframes reading-progress {
-  to { transform: scaleX(1); }
-}
-
 /* --- Blockquotes, images, misc --- */
 
+/* Pull-quote: thin accent rule, '>' prompt hanging in the gutter, italic serif */
 blockquote {
-  border-top: 2px solid var(--accent);
-  border-bottom: 2px solid var(--accent);
-  background: var(--accent-soft);
-  padding: 1.5rem;
-  margin: 2rem 0;
-  color: var(--text-muted);
+  position: relative;
+  margin: 2.25rem 0;
+  padding: 0.15rem 0 0.15rem 1.5rem;
+  border-left: 2px solid var(--accent);
+  font-style: italic;
+  font-size: 1.08em;
+  line-height: 1.6;
+  color: var(--text);
 }
 
 blockquote::before {
   content: '>';
-  display: block;
+  position: absolute;
+  left: -1.4rem;
+  top: 0.15rem;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 0.85rem;
+  line-height: calc(1.08em * 1.6 / 0.85);
   color: var(--accent);
-  margin-bottom: 0.5rem;
+}
+
+blockquote p {
+  margin-bottom: 1rem;
 }
 
 blockquote p:last-child {
   margin-bottom: 0;
+}
+
+/* Italic inside the quote flips back to roman for contrast */
+blockquote em {
+  font-style: normal;
+}
+
+/* Narrow screens have no gutter for the prompt */
+@media (max-width: 640px) {
+  blockquote::before {
+    content: none;
+  }
 }
 
 img {
@@ -947,6 +960,12 @@ footer {
   line-height: 1.4;
 }
 
+/* TOC entries are short labels: never justify or hyphenate them */
+article .toc li {
+  text-align: left;
+  hyphens: none;
+}
+
 /* Top level: '//' marker, sub-list wraps onto its own row below */
 .toc > ul > li {
   display: flex;
@@ -969,7 +988,7 @@ footer {
 
 .toc ul ul li {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 0.5rem;
 }
 
@@ -978,10 +997,15 @@ footer {
   color: var(--text-muted);
 }
 
+/* Underline fills with reading progress through the section (--p set in page.html) */
 .toc a {
   color: var(--text-muted);
   text-decoration: none;
   transition: color 0.2s ease;
+  padding-bottom: 2px;
+  background:
+    linear-gradient(var(--accent), var(--accent)) left bottom / calc(var(--p, 0) * 100%) 1px no-repeat,
+    linear-gradient(var(--border), var(--border)) left bottom / 100% 1px no-repeat;
 }
 
 .toc a:hover {
@@ -991,9 +1015,239 @@ footer {
 /* Section currently in view (set by scroll-spy in page.html) */
 .toc a.active {
   color: var(--text);
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 3px;
+}
+
+/* Rail extras (title, ASCII progress, key hint) only exist on wide screens */
+.rail-title,
+.rail-progress,
+.rail-meta,
+.rail-hint,
+.rail-notes,
+.rail-next {
+  display: none;
+}
+
+/* Wide screens: TOC moves into a sticky rail right of the text column.
+   The rail is absolutely placed beside the article and spans its full height,
+   so the sticky block inside it follows the reader down the page.
+   The body shifts left so the column + rail stay centred as a group. */
+@media (min-width: 1400px) {
+  body:has(.toc-rail) {
+    --rail-gap: 5rem;
+    margin-left: max(0px, calc((100vw - 84ch) / 2 - 9rem));
+  }
+
+  /* The rail's ASCII bar replaces the top bar */
+  body:has(.toc-rail) .reading-progress {
+    display: none;
+  }
+
+  article {
+    position: relative;
+  }
+
+  .toc-rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(100% + var(--rail-gap));
+    width: 16rem;
+  }
+
+  .rail-inner {
+    position: sticky;
+    top: 3rem;
+    max-height: calc(100vh - 6rem);
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    border-left: 1px dashed var(--border);
+    font-family: var(--font-mono);
+  }
+
+  .rail-title {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    line-height: 1.35;
+    color: var(--text);
+    text-decoration: none;
+    margin-bottom: 1.25rem;
+    text-wrap: balance;
+  }
+
+  .rail-title:hover {
+    color: var(--accent);
+  }
+
+  .toc {
+    min-height: 0;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    scrollbar-width: thin;
+  }
+
+  /* No collapsing in the rail: the summary is just a label */
+  .toc summary {
+    pointer-events: none;
+  }
+
+  .toc summary::after,
+  .toc[open] summary::after {
+    content: none;
+  }
+
+  .rail-progress {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .rail-bar b {
+    font-weight: inherit;
+    color: var(--accent);
+  }
+
+  .rail-pct {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rail-hint {
+    display: block;
+    margin: 0.5rem 0 0;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+  }
+
+  .rail-hint kbd {
+    font-family: inherit;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0 0.3em;
+  }
+
+  .rail-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 0.35rem;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .rail-copy {
+    font: inherit;
+    color: var(--accent);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .rail-copy:hover {
+    color: var(--text);
+  }
+
+  .rail-label {
+    display: block;
+    margin: 0 0 0.4rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  /* Footnotes for markers currently on screen */
+  .rail-notes:not([hidden]) {
+    display: block;
+    flex-shrink: 0;
+    max-height: 30vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  .rail-notes ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .rail-notes li {
+    margin-bottom: 0.6rem;
+    font-family: var(--font-serif);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    overflow-wrap: break-word;
+  }
+
+  .rail-notes a {
+    color: var(--text);
+  }
+
+  .rail-notes a.external::after {
+    content: none;
+  }
+
+  .rail-notes .rail-note-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* The notes are already beside the text, so skip the hover popovers */
+  body:has(.rail-notes) .footnote-popover {
+    display: none;
+  }
+
+  /* Next post fades in near the end of the article */
+  .rail-next {
+    display: block;
+    flex-shrink: 0;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: var(--text);
+    text-decoration: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  }
+
+  .rail-next.show {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .rail-next:hover {
+    color: var(--accent);
+  }
+}
+
+/* Very wide screens: the rail moves out to clear the wider media breakout (see below) */
+@media (min-width: 1700px) {
+  body:has(.toc-rail) {
+    --rail-gap: 7.5rem;
+    margin-left: max(0px, calc((100vw - 84ch) / 2 - 11rem));
+  }
 }
 
 /* --- Post navigation --- */
@@ -1388,7 +1642,6 @@ footer {
 
 article p,
 article li,
-article blockquote p,
 .footnotes-list li p {
   text-align: justify;
   hyphens: auto;
@@ -1397,7 +1650,11 @@ article blockquote p,
   overflow-wrap: break-word;
 }
 
-/* Short/narrow lines look worse justified: keep TOC, meta and phones ragged */
+/* Short/narrow lines look worse justified: keep TOC, meta, quotes and phones ragged */
+article blockquote p {
+  text-align: left;
+}
+
 @media (max-width: 640px) {
   article p,
   article li,
@@ -1417,6 +1674,16 @@ article blockquote p,
   article > pre {
     margin-left: -3.5rem;
     margin-right: -3.5rem;
+  }
+}
+
+@media (min-width: 1700px) {
+  article .code-card,
+  article .post-figure,
+  article .post-cover,
+  article > pre {
+    margin-left: -6rem;
+    margin-right: -6rem;
   }
 }
 

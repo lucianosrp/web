@@ -48,6 +48,9 @@
   {% set toc_len = page.toc | length %}
   {% set toc_first = page.toc | first %}
   {% if toc_len > 1 or toc_first.children %}
+  <aside class="toc-rail" data-minutes="{{ page.reading_time }}" data-permalink="{{ page.permalink | safe }}">
+  <div class="rail-inner">
+  <a class="rail-title" href="#">{{ page.title }}</a>
   <details class="toc" open>
     <summary>// contents</summary>
     <ul>
@@ -65,6 +68,19 @@
       {% endfor %}
     </ul>
   </details>
+  <div class="rail-progress" aria-hidden="true"><span class="rail-bar"></span><span class="rail-pct">0%</span></div>
+  <div class="rail-meta">
+    <span class="rail-left" aria-hidden="true">~{{ page.reading_time }} min left</span>
+    <button class="rail-copy" type="button">[copy link]</button>
+  </div>
+  <p class="rail-hint" aria-hidden="true"><kbd>j</kbd> / <kbd>k</kbd> jump &middot; <kbd>c</kbd> copy link</p>
+  <div class="rail-notes" hidden><p class="rail-label">// notes</p><ol></ol></div>
+  {% set next = page.higher | default(value=page.lower) %}
+  {% if next %}
+  <a class="rail-next" href="{{ next.permalink | safe }}"><span class="rail-label">// {% if page.higher %}up next{% else %}keep reading{% endif %}</span>{{ next.title }} &rarr;</a>
+  {% endif %}
+  </div>
+  </aside>
   {% endif %}
   {% endif %}
 
@@ -112,21 +128,113 @@ document.querySelectorAll('.footnote-reference a').forEach(ref => {
   ref.parentElement.appendChild(pop);
 });
 
-// TOC scroll-spy: mark the section currently being read
-const tocLinks = [...document.querySelectorAll('.toc a[href*="#"]')];
-const tocHeads = tocLinks.map(a => document.getElementById(decodeURIComponent(a.hash.slice(1)))).filter(Boolean);
-if (tocHeads.length) {
-  let ticking = false;
-  const update = () => {
-    ticking = false;
-    let active = tocHeads[0];
-    for (const h of tocHeads) {
-      if (h.getBoundingClientRect().top <= 120) active = h; else break;
-    }
-    tocLinks.forEach(a => a.classList.toggle('active', a.hash.slice(1) === active.id));
-  };
-  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-  update();
+// Wide screens show the TOC as a sticky rail, which is never collapsed
+const tocWide = matchMedia('(min-width: 1400px)');
+const tocOpen = () => { if (tocWide.matches) document.querySelector('.toc')?.setAttribute('open', ''); };
+tocWide.addEventListener('change', tocOpen);
+tocOpen();
+
+// Reading progress (top bar + ASCII bar in the rail) and TOC scroll-spy.
+// Each TOC link's underline fills (--p, 0..1) with how far the reader is through
+// that section; a section runs to the next heading of the same or higher level.
+const READ_LINE = 120;   // a heading above this line counts as being read
+const JUMP_TO = 100;     // where j/k land a heading
+const BAR_LEN = 20;
+const topBar = document.querySelector('.reading-progress');
+const railBar = document.querySelector('.rail-bar');
+const railPct = document.querySelector('.rail-pct');
+const rail = document.querySelector('.toc-rail');
+const railMinutes = rail ? +rail.dataset.minutes : 0;
+const railLeft = document.querySelector('.rail-left');
+const railNext = document.querySelector('.rail-next');
+const railCopy = document.querySelector('.rail-copy');
+
+// Footnotes whose markers are on screen are mirrored into the rail
+const railNotes = document.querySelector('.rail-notes');
+const noteRefs = [...document.querySelectorAll('.footnote-reference a')];
+let shownNotes = '';
+const updateNotes = () => {
+  if (!railNotes || !noteRefs.length) return;
+  const ids = [...new Set(noteRefs
+    .filter(r => { const b = r.getBoundingClientRect(); return b.bottom > 0 && b.top < innerHeight; })
+    .map(r => r.hash.slice(1)))];
+  const key = ids.join();
+  if (key === shownNotes) return;
+  shownNotes = key;
+  railNotes.hidden = !ids.length;
+  railNotes.querySelector('ol').innerHTML = ids.map(id => {
+    const note = document.getElementById(id)?.querySelector('p');
+    if (!note) return '';
+    const body = note.cloneNode(true);
+    body.querySelector('a[href*="#fr-"]')?.remove();
+    return `<li><a class="rail-note-num" href="#${id}">[${id.replace('fn-', '')}]</a> ${body.innerHTML}</li>`;
+  }).join('');
+};
+const tocItems = [...document.querySelectorAll('.toc a[href*="#"]')]
+  .map(a => ({ a, h: document.getElementById(decodeURIComponent(a.hash.slice(1))) }))
+  .filter(t => t.h);
+const levels = tocItems.map(t => +t.h.tagName[1]);
+const contentEnd = document.querySelector('.post-nav') || document.querySelector('article');
+let ticking = false;
+const update = () => {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight;
+  const done = max > 0 ? Math.min(1, scrollY / max) : 1;
+  topBar.style.transform = `scaleX(${done})`;
+  if (railBar) {
+    const n = Math.round(done * BAR_LEN);
+    railBar.innerHTML = '[<b>' + '/'.repeat(n) + '</b>' + '\u00b7'.repeat(BAR_LEN - n) + ']';
+    railPct.textContent = Math.round(done * 100) + '%';
+    const left = Math.ceil(railMinutes * (1 - done));
+    railLeft.textContent = done >= 1 ? 'done \u2713' : left <= 1 ? '< 1 min left' : `~${left} min left`;
+    railNext?.classList.toggle('show', done >= 0.9);
+    updateNotes();
+  }
+  if (!tocItems.length) return;
+  const tops = tocItems.map(t => t.h.getBoundingClientRect().top);
+  const endTop = contentEnd.getBoundingClientRect()[contentEnd.matches('article') ? 'bottom' : 'top'];
+  let active = 0;
+  tocItems.forEach((t, i) => {
+    if (tops[i] <= READ_LINE) active = i;
+    let j = i + 1;
+    while (j < tocItems.length && levels[j] > levels[i]) j++;
+    const stop = j < tocItems.length ? tops[j] : endTop;
+    const p = done >= 1 ? 1 : Math.min(1, Math.max(0, (READ_LINE - tops[i]) / (stop - tops[i])));
+    t.a.style.setProperty('--p', p.toFixed(3));
+  });
+  tocItems.forEach((t, i) => t.a.classList.toggle('active', i === active));
+  activeId = tops[0] <= READ_LINE ? tocItems[active].h.id : null;
+};
+let activeId = null;
+const schedule = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+addEventListener('scroll', schedule, { passive: true });
+addEventListener('resize', schedule);
+update();
+
+// Copy a link to the section being read (canonical URL, not localhost)
+const copyLink = () => {
+  const url = rail.dataset.permalink + (activeId ? '#' + activeId : '');
+  navigator.clipboard.writeText(url).then(() => {
+    railCopy.textContent = '[copied]';
+    setTimeout(() => { railCopy.textContent = '[copy link]'; }, 1500);
+  });
+};
+railCopy?.addEventListener('click', copyLink);
+
+// j / k: jump to the next / previous section heading; c: copy section link
+if (tocItems.length) {
+  addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest('input, textarea, select, [contenteditable]')) return;
+    if (e.key === 'c' && railCopy && getSelection().isCollapsed) { e.preventDefault(); copyLink(); return; }
+    if (e.key !== 'j' && e.key !== 'k') return;
+    const tops = tocItems.map(t => t.h.getBoundingClientRect().top);
+    const i = e.key === 'j'
+      ? tops.findIndex(t => t > JUMP_TO + 2)
+      : tops.findLastIndex(t => t < JUMP_TO - 2);
+    if (i < 0) return;
+    e.preventDefault();
+    scrollTo({ top: scrollY + tops[i] - JUMP_TO });
+  });
 }
 </script>
 {% endblock %}

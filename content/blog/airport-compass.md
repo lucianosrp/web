@@ -33,11 +33,11 @@ I first generated the top 15 airports by number of destinations. Each chart (or 
 
 Some airports like New York JFK and London Heathrow (LHR) represent an important hub for transatlantic flights. In these charts, we can see how LHR has a long bar towards the West (towards North America) and JFK has one towards the East (Europe).
 
-{{ <img src="/assets/img/airport-compass/LHR-dark.png" alt="LHR" /> }}
+{{ <img src="/assets/img/airport-compass/LHR-dark.webp" alt="LHR" /> }}
 
 Other airports' compasses, instead, are majorly driven by the geographical constrains of their location. Tokyo's Narita Intl. Airport is a very good example to illustrate this case. It has virtually no routes pointing eastwards! This is because Japan has the Pacific Ocean to its east side and most of the routes connecting Japan to North America take an initial bearing pointing North! (Since this would be the shortest great circle path)
 
-{{ <img src="/assets/img/airport-compass/NRT-dark.png" alt="NRT" /> }}
+{{ <img src="/assets/img/airport-compass/NRT-dark.webp" alt="NRT" /> }}
 
 ## How-to
 
