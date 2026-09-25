@@ -1,11 +1,19 @@
 description: >-
-  Recent books I have been reading and whose progress I am tracking
+  Recent books, blogs or papers I have been reading and whose progress I am tracking
   (not a complete list).
 
 books:
+  - title: "Just keep buying"
+    date: 2026-09-16
+    progress: 25
+    author: "Nick Maggiulli"
+  - title: "Machines of Loving Grace"
+    date: 2026-09-11
+    progress: 100
+    author: "Dario Amodei"
   - title: "If Anyone Builds It, Everyone Dies"
     date: 2026-09-03
-    progress: 45
+    progress: 100
     author: "Eliezer Yudkowsky and Nate Soares"
   - title: "Libercomunismo"
     date: 2026-09-03
