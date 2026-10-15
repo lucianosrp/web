@@ -5,7 +5,7 @@ description: >-
 books:
   - title: "Just keep buying"
     date: 2026-09-16
-    progress: 25
+    progress: 100
     author: "Nick Maggiulli"
   - title: "Machines of Loving Grace"
     date: 2026-09-11
@@ -26,7 +26,7 @@ books:
   - title: "Free to Choose"
     date: 2025-06-02
     author: "Milton Friedman"
-    progress: 47
+    progress: 57
   - title: "The Great Wall"
     date: 2024-04-02
     author: "Julia Lovell"
