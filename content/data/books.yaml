@@ -3,6 +3,10 @@ description: >-
   (not a complete list).
 
 books:
+  - title: "Il giorno della civetta"
+    date: 2026-09-22
+    progress: 100
+    author: "Leonardo Sciascia"
   - title: "Just keep buying"
     date: 2026-09-16
     progress: 100
