@@ -17,6 +17,7 @@ Vault front matter (plain Obsidian YAML, all optional except title):
     tags: [AI, Python]
     cover: /assets/img/<slug>/hero.webp
     cover_alt: Alt text for the cover
+    cover_focus: west            # optional: which side of the cover the og:image card keeps
     updated: 2026-10-01
     slug: custom-slug          # default: slugified title
     ---
@@ -34,7 +35,7 @@ What gets translated:
                                  additions / retractions, e.g. "> [!update] 12 Oct 2026"
   > [!note] Title             -> blockquote with a bold title
   ==highlight==               -> <mark>highlight</mark>
-  tags / cover / cover_alt    -> taxonomies.tags / extra.cover / extra.cover_alt
+  tags / cover / cover_alt    -> taxonomies.tags / extra.cover / extra.cover_alt (+ cover_focus)
 """
 
 from __future__ import annotations
@@ -255,7 +256,7 @@ def zola_front_matter(fm: dict, tags: list[str]) -> str:
     out.setdefault("draft", True)
     if tags:
         out["taxonomies"] = {"tags": tags}
-    extra = {k: fm[k] for k in ("cover", "cover_alt") if fm.get(k)}
+    extra = {k: fm[k] for k in ("cover", "cover_alt", "cover_focus") if fm.get(k)}
     if extra:
         out["extra"] = extra
     return "---\n" + yaml.safe_dump(out, sort_keys=False, allow_unicode=True, default_flow_style=None) + "---\n\n"

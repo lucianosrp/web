@@ -21,7 +21,7 @@ MUTED = "#94908a"
 ACCENT = "#e8a068"
 
 
-def render(slug: str, title: str, date: str, cover: str | None = None) -> None:
+def render(slug: str, title: str, date: str, cover: str | None = None, focus: str = "center") -> None:
     dest = OUT / f"{slug}.png"
     footer = f"luciano.live :: blog :: {date}"
 
@@ -37,7 +37,7 @@ def render(slug: str, title: str, date: str, cover: str | None = None) -> None:
             "-resize",
             "480x630^",
             "-gravity",
-            "center",
+            focus,
             "-extent",
             "480x630",
             ")",
@@ -137,6 +137,8 @@ def main() -> None:
             fm["title"],
             str(fm.get("date", "")).replace("-", "."),
             fm.get("extra", {}).get("cover"),
+            # which part of a wide cover to keep in the narrow card column
+            fm.get("extra", {}).get("cover_focus", "center"),
         )
 
 

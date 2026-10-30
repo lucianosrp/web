@@ -7,10 +7,16 @@ description: The developer is becoming an editor — some thoughts, following my
   what programming means.
 taxonomies:
   tags: [AI, Programming]
+extra: {cover: /assets/img/programming-has-changed-again/cover.webp, cover_alt: 'Collage
+    of me and Pete talking at the podcast mics, over code, film strips and scissors
+    on orange shapes', cover_focus: west}
 ---
 
 I always wanted to write about my thoughts on how the way we program has drastically changed in the past year.
 This can be considered an extension of [episode #2 of the ExpressVPN Research Engineering Podcast](https://open.spotify.com/episode/6gMsXH0CLYiTqSDCKi3LZM), to which I was honored to be invited.
+
+{{ <img src="/assets/img/programming-has-changed-again/expressvpn-podcast.webp" alt="Recording episode #2 of the ExpressVPN Research Engineering Podcast" /> }}
+
 In this post, I am trying to put together some thoughts I have had over the past month. Giving them a consistent narrative was not easy, since the "narrative" itself on this topic has been changing rapidly — and I am not able to write about it as fast as I would like. 
 Some parts of this post may be controversial and I accept that. I understand that people have different points of view and I'm happy to compare mine with others'. These are my own views at the time of writing, and they might change as things evolve. 
 
