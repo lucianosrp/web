@@ -1,6 +1,7 @@
 ---
 title: I was wrong about Rye
 date: 2024-03-14
+updated: 2026-09-27
 draft: false
 description: Correcting what I said about Rye's virtual environments and IDE support
   in my Python tools post.
@@ -32,3 +33,12 @@ This makes package installation much faster.
 The core mistake was assuming that "custom virtual environment format" meant "incompatible with everything." I should have tested it in my IDE first before writing it off.
 
 The lesson: Don't assume — test.
+
+<aside class="post-update post-update--update">
+<p class="post-update-label">// update · September 2026</p>
+
+Rye has since been discontinued in favour of uv, from the same team at Astral[^1], and I now use uv everywhere. The lesson still stands, though.
+
+</aside>
+
+[^1]: [astral-sh/rye — README](https://github.com/astral-sh/rye)

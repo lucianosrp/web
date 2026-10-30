@@ -500,6 +500,66 @@ blockquote em {
   font-style: normal;
 }
 
+/* Post updates: later additions or retractions, from > [!update] / > [!correction].
+   A dashed box like the rail, with a mono "// update · date" label */
+.post-update {
+  margin: 2.25rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px dashed var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+  background: var(--accent-soft);
+}
+
+.post-update > :last-child {
+  margin-bottom: 0;
+}
+
+article .post-update p {
+  margin-bottom: 1rem;
+}
+
+article .post-update > :last-child {
+  margin-bottom: 0;
+}
+
+.post-update-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+article .post-update .post-update-label {
+  margin-bottom: 0.6rem;
+  text-align: left;
+}
+
+/* Quotes inside an update sit tighter and lose the gutter prompt */
+.post-update blockquote {
+  margin: 1rem 0;
+}
+
+.post-update blockquote::before {
+  content: none;
+}
+
+/* Corrections: muted instead of accent, so they read as a retraction */
+.post-update--correction {
+  border-left-color: var(--text-muted);
+  background: var(--code-bg);
+}
+
+.post-update--correction .post-update-label {
+  color: var(--text-muted);
+}
+
+/* Text an update invalidates: write ~~like this~~ next to the correction */
+article del {
+  color: var(--text-muted);
+  text-decoration-color: var(--text-muted);
+}
+
 /* Narrow screens have no gutter for the prompt */
 @media (max-width: 640px) {
   blockquote::before {
@@ -1115,7 +1175,7 @@ article :is(h2, h3, h4)[id] {
 @media (min-width: 1400px) {
   body:has(.toc-rail) {
     --rail-gap: 5rem;
-    margin-left: max(0px, calc((100vw - 84ch) / 2 - 9rem));
+    margin-left: max(0px, calc((100vw - 84ch) / 2 - 11rem));
   }
 
   /* The rail's ASCII bar replaces the top bar */
@@ -1132,7 +1192,7 @@ article :is(h2, h3, h4)[id] {
     top: 0;
     bottom: 0;
     left: calc(100% + var(--rail-gap));
-    width: 16rem;
+    width: 20rem;
   }
 
   .rail-inner {
@@ -1251,7 +1311,7 @@ article :is(h2, h3, h4)[id] {
   .rail-notes:not([hidden]) {
     display: block;
     flex-shrink: 0;
-    max-height: 30vh;
+    max-height: 40vh;
     overflow-y: auto;
     scrollbar-width: thin;
     margin-top: 1.25rem;
@@ -1272,6 +1332,8 @@ article :is(h2, h3, h4)[id] {
     line-height: 1.45;
     color: var(--text-muted);
     overflow-wrap: break-word;
+    text-align: left;
+    hyphens: none;
   }
 
   .rail-notes a {
@@ -1327,7 +1389,7 @@ article :is(h2, h3, h4)[id] {
 @media (min-width: 1700px) {
   body:has(.toc-rail) {
     --rail-gap: 7.5rem;
-    margin-left: max(0px, calc((100vw - 84ch) / 2 - 11rem));
+    margin-left: max(0px, calc((100vw - 84ch) / 2 - 13rem));
   }
 }
 

@@ -1,6 +1,7 @@
 ---
 title: Python tools I use
 date: 2024-01-10
+updated: 2026-09-27
 draft: false
 description: A look at the new wave of Python tooling written in Rust — Ruff, Rye
   and uv — what I actually use, and what I'm still holding off on.
@@ -23,6 +24,13 @@ Adopting `ruff format` together with `ruff check` in your pipelines can substant
 ## Rye
 
 Even before Astral's ruff and uv were available, I got Rye a try. Rye was the first attempt to implement a "Cargo for Python" - a 360-degree project and package management at your fingertips. I immediately found Rye very easy to use and, to some extent, similar to Poetry! However, the lack of implementations for VS Code or PyCharm (at the time of testing) made me reluctant to adopt it full time.
+
+<aside class="post-update post-update--correction">
+<p class="post-update-label">// correction · March 2024</p>
+
+This turned out to be my mistake: Rye's virtual environments are regular virtualenvs, so VS Code and PyCharm pick them up just fine. More in the update at the end of this post.
+
+</aside>
 
 ## Uv
 
@@ -50,8 +58,20 @@ For my daily workflow, I use:
 
 The combination of fast tooling and good editor integration is what makes this workflow viable. If your IDE doesn't support the tool, the speed gains don't matter.
 
-## Update: Rye
+<aside class="post-update post-update--update">
+<p class="post-update-label">// update · March 2024</p>
 
-*January 2025 note:* After writing this post, I discovered that Rye's virtual environments work with most IDEs — they're just regular virtualenvs! I was wrong to dismiss it. I now use Rye full-time for personal projects.
+After writing this post, I discovered that Rye's virtual environments work with most IDEs — they're just regular virtualenvs! I was wrong to dismiss it (more in [I was wrong about Rye](/blog/wrong-about-rye/)). I now use Rye full-time for personal projects.
 
 My tip: always run `rye sync` after `rye add` — this installs the actual packages. Although I like this behavior, an option to default `rye sync` after every `rye add` (like `cargo add`) would be nice.
+
+</aside>
+
+<aside class="post-update post-update--update">
+<p class="post-update-label">// update · September 2026</p>
+
+Rye is no longer developed: Astral now points everyone to uv as its successor[^1]. I have since moved to uv everywhere, both for personal projects and at work, where PyCharm support has caught up, so the Poetry setup above is history too.
+
+</aside>
+
+[^1]: [astral-sh/rye — README](https://github.com/astral-sh/rye)

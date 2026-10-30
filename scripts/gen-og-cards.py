@@ -9,6 +9,8 @@ import subprocess
 import tomllib
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parent.parent
 FONTS = ROOT / "scripts" / "fonts"
 OUT = ROOT / "static" / "og"
@@ -122,8 +124,12 @@ def main() -> None:
     for md in sorted((ROOT / "content" / "blog").glob("*.md")):
         if md.name == "_index.md":
             continue
-        front_matter = md.read_text().split("+++")[1]
-        fm = tomllib.loads(front_matter)
+        # Posts synced by stage.py use YAML (---); older ones may still be TOML (+++)
+        text = md.read_text()
+        if text.startswith("---"):
+            fm = yaml.safe_load(text.split("---")[1])
+        else:
+            fm = tomllib.loads(text.split("+++")[1])
         if fm.get("draft"):
             continue
         render(

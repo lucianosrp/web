@@ -30,6 +30,8 @@ What gets translated:
   ![[image.png|alt]]          -> copied to static/assets/img/<slug>/ (png/jpg -> webp) and rendered
                                  with the `img` component (intrinsic width/height)
   ![alt](/assets/...)         -> `img` component (svg stays plain markdown)
+  > [!update] Title          -> <aside class="post-update"> (also [!correction]); for later
+                                 additions / retractions, e.g. "> [!update] 12 Oct 2026"
   > [!note] Title             -> blockquote with a bold title
   ==highlight==               -> <mark>highlight</mark>
   tags / cover / cover_alt    -> taxonomies.tags / extra.cover / extra.cover_alt
@@ -39,6 +41,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import html
 import os
 import re
 import shutil
@@ -153,6 +156,24 @@ def convert_body(body: str, slug: str, tags: list[str], titles: dict[str, str], 
 
     # ==highlight==
     body = re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", body)
+
+    # > [!update] Title / > [!correction] Title  -> <aside class="post-update">
+    # The whole callout becomes an aside; its body stays markdown (blank lines
+    # around it), so links, nested quotes and footnotes still work.
+    def update_block(m: re.Match) -> str:
+        kind, title = m.group(1).lower(), m.group(2).strip()
+        label = kind + (f" · {html.escape(title)}" if title else "")
+        inner = "\n".join(re.sub(r"^> ?", "", l) for l in m.group(3).splitlines()).strip()
+        return (
+            f'<aside class="post-update post-update--{kind}">\n'
+            f'<p class="post-update-label">// {label}</p>\n\n'
+            f"{inner}\n\n</aside>\n"
+        )
+
+    body = re.sub(
+        r"^> \[!(update|correction)\][+-]?(.*)\n((?:>.*(?:\n|$))*)",
+        update_block, body, flags=re.M | re.I,
+    )
 
     # > [!note] Title  -> blockquote with a bold first line
     def callout(m: re.Match) -> str:
